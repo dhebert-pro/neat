@@ -67,17 +67,30 @@ const displayAgentAt = (
   app.stage.addChild(sprite);
 };
 
+const displayAgents = () => {
+  displayAgentAt(checkpoint1, Math.random() * 750, Math.random() * 550, 50);
+  displayAgentAt(checkpoint2, Math.random() * 750, Math.random() * 550, 50);
+  displayAgentAt(checkpoint3, Math.random() * 750, Math.random() * 550, 50);
+  displayAgentAt(checkpoint4, Math.random() * 750, Math.random() * 550, 50);
+  displayAgentAt(agent, 0, 0, 50);
+};
+
+const reset = () => {
+  //app.ticker.destroy();
+  console.log(app.stage.children);
+  app.stage.removeChildren();
+  console.log(app.stage.children);
+  app.render();
+  displayAgents();
+};
+
 onMounted(async () => {
   app = new Application({
     backgroundColor: "#ffffff",
   });
   canvas.value?.appendChild(app.view as HTMLCanvasElement);
   await loadAssets();
-  displayAgentAt(checkpoint1, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(checkpoint2, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(checkpoint3, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(checkpoint4, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(agent, 0, 0, 100);
+  displayAgents();
 });
 </script>
 
@@ -108,11 +121,15 @@ onMounted(async () => {
     >
       C'est parti !
     </button>
+    <button @click="reset">Reset</button>
   </main>
 </template>
 
 <style scoped>
 .canvas :deep() canvas {
   border: 1px solid #000000;
+}
+button {
+  margin-left: 20px;
 }
 </style>
