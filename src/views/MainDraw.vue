@@ -2,6 +2,7 @@
 import { Application, Assets, Sprite, type ICanvas, Ticker } from "pixi.js";
 import { ref, onMounted } from "vue";
 import Position from "@/model/Position";
+import Agent from "@/model/Agent";
 
 const SPEED = 10;
 const STAGE_WIDTH = 800;
@@ -11,28 +12,29 @@ const AGENT_WIDTH = 50;
 
 const canvas = ref<HTMLElement | null>(null);
 let app: Application<ICanvas>;
-let agent: Sprite;
-let checkpoint1: Sprite;
-let checkpoint2: Sprite;
-let checkpoint3: Sprite;
-let checkpoint4: Sprite;
+let agent: Agent;
+let agentSprite: Sprite;
+let checkpoint1Sprite: Sprite;
+let checkpoint2Sprite: Sprite;
+let checkpoint3Sprite: Sprite;
+let checkpoint4Sprite: Sprite;
 
 const loadAssets = async () => {
   const characterTexture = await Assets.load("src/assets/character.jpg");
-  agent = Sprite.from(characterTexture);
+  agentSprite = Sprite.from(characterTexture);
   const checkpointTexture = await Assets.load("src/assets/checkpoint.png");
-  checkpoint1 = Sprite.from(checkpointTexture);
-  checkpoint2 = Sprite.from(checkpointTexture);
-  checkpoint3 = Sprite.from(checkpointTexture);
-  checkpoint4 = Sprite.from(checkpointTexture);
+  checkpoint1Sprite = Sprite.from(checkpointTexture);
+  checkpoint2Sprite = Sprite.from(checkpointTexture);
+  checkpoint3Sprite = Sprite.from(checkpointTexture);
+  checkpoint4Sprite = Sprite.from(checkpointTexture);
 };
 
 const moveAgent = () => {
   const positions = [
-    new Position(checkpoint1.x, checkpoint1.y),
-    new Position(checkpoint2.x, checkpoint2.y),
-    new Position(checkpoint3.x, checkpoint3.y),
-    new Position(checkpoint4.x, checkpoint4.y),
+    new Position(checkpoint1Sprite.x, checkpoint1Sprite.y),
+    new Position(checkpoint2Sprite.x, checkpoint2Sprite.y),
+    new Position(checkpoint3Sprite.x, checkpoint3Sprite.y),
+    new Position(checkpoint4Sprite.x, checkpoint4Sprite.y),
   ];
   moveAgentTo(positions, 0);
 };
@@ -42,13 +44,20 @@ const moveAgentTo = (positions: Position[], index: number) => {
   const ticker = new Ticker();
   ticker.add((delta: number) => {
     const distance = Math.sqrt(
-      Math.pow(agent.x - position.x, 2) + Math.pow(agent.y - position.y, 2)
+      Math.pow(agent.position.x - position.x, 2) +
+        Math.pow(agent.position.y - position.y, 2)
     );
-    agent.x = agent.x + ((position.x - agent.x) * SPEED * delta) / distance;
-    agent.y = agent.y + ((position.y - agent.y) * SPEED * delta) / distance;
+    agent.setPosX(
+      agent.position.x +
+        ((position.x - agent.position.x) * SPEED * delta) / distance
+    );
+    agent.setPosY(
+      agent.position.y +
+        ((position.y - agent.position.y) * SPEED * delta) / distance
+    );
     if (
-      Math.abs(agent.x - position.x) < SPEED &&
-      Math.abs(agent.y - position.y) < SPEED
+      Math.abs(agent.position.x - position.x) < SPEED &&
+      Math.abs(agent.position.y - position.y) < SPEED
     ) {
       ticker.destroy();
       if (index < positions.length - 1) {
@@ -75,34 +84,39 @@ const displayAgentAt = (
 
 const displayAgents = () => {
   displayAgentAt(
-    checkpoint1,
+    checkpoint1Sprite,
     Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
     Math.random() *
-      (STAGE_HEIGHT - (checkpoint1.height / checkpoint1.width) * TARGET_WIDTH),
+      (STAGE_HEIGHT -
+        (checkpoint1Sprite.height / checkpoint1Sprite.width) * TARGET_WIDTH),
     TARGET_WIDTH
   );
   displayAgentAt(
-    checkpoint2,
+    checkpoint2Sprite,
     Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
     Math.random() *
-      (STAGE_HEIGHT - (checkpoint2.height / checkpoint2.width) * TARGET_WIDTH),
+      (STAGE_HEIGHT -
+        (checkpoint2Sprite.height / checkpoint2Sprite.width) * TARGET_WIDTH),
     TARGET_WIDTH
   );
   displayAgentAt(
-    checkpoint3,
+    checkpoint3Sprite,
     Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
     Math.random() *
-      (STAGE_HEIGHT - (checkpoint3.height / checkpoint3.width) * TARGET_WIDTH),
+      (STAGE_HEIGHT -
+        (checkpoint3Sprite.height / checkpoint3Sprite.width) * TARGET_WIDTH),
     TARGET_WIDTH
   );
   displayAgentAt(
-    checkpoint4,
+    checkpoint4Sprite,
     Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
     Math.random() *
-      (STAGE_HEIGHT - (checkpoint1.height / checkpoint1.width) * TARGET_WIDTH),
+      (STAGE_HEIGHT -
+        (checkpoint1Sprite.height / checkpoint1Sprite.width) * TARGET_WIDTH),
     TARGET_WIDTH
   );
-  displayAgentAt(agent, 0, 0, AGENT_WIDTH);
+  agent = new Agent(agentSprite, new Position(0, 0));
+  displayAgentAt(agent.sprite, 0, 0, AGENT_WIDTH);
 };
 
 const reset = () => {
