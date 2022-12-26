@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { Application, Assets, Sprite, type ICanvas, Ticker } from "pixi.js";
 import { ref, onMounted } from "vue";
+import Position from "@/model/Position";
 
 const SPEED = 10;
+const STAGE_WIDTH = 800;
+const STAGE_HEIGHT = 600;
+const TARGET_WIDTH = 50;
+const AGENT_WIDTH = 50;
 
 const canvas = ref<HTMLElement | null>(null);
 let app: Application<ICanvas>;
@@ -11,11 +16,6 @@ let checkpoint1: Sprite;
 let checkpoint2: Sprite;
 let checkpoint3: Sprite;
 let checkpoint4: Sprite;
-
-interface Position {
-  x: number;
-  y: number;
-}
 
 const loadAssets = async () => {
   const characterTexture = await Assets.load("src/assets/character.jpg");
@@ -27,7 +27,13 @@ const loadAssets = async () => {
   checkpoint4 = Sprite.from(checkpointTexture);
 };
 
-const moveAgent = (positions: Position[]) => {
+const moveAgent = () => {
+  const positions = [
+    new Position(checkpoint1.x, checkpoint1.y),
+    new Position(checkpoint2.x, checkpoint2.y),
+    new Position(checkpoint3.x, checkpoint3.y),
+    new Position(checkpoint4.x, checkpoint4.y),
+  ];
   moveAgentTo(positions, 0);
 };
 
@@ -68,18 +74,39 @@ const displayAgentAt = (
 };
 
 const displayAgents = () => {
-  displayAgentAt(checkpoint1, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(checkpoint2, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(checkpoint3, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(checkpoint4, Math.random() * 750, Math.random() * 550, 50);
-  displayAgentAt(agent, 0, 0, 50);
+  displayAgentAt(
+    checkpoint1,
+    Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
+    Math.random() *
+      (STAGE_HEIGHT - (checkpoint1.height / checkpoint1.width) * TARGET_WIDTH),
+    TARGET_WIDTH
+  );
+  displayAgentAt(
+    checkpoint2,
+    Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
+    Math.random() *
+      (STAGE_HEIGHT - (checkpoint2.height / checkpoint2.width) * TARGET_WIDTH),
+    TARGET_WIDTH
+  );
+  displayAgentAt(
+    checkpoint3,
+    Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
+    Math.random() *
+      (STAGE_HEIGHT - (checkpoint3.height / checkpoint3.width) * TARGET_WIDTH),
+    TARGET_WIDTH
+  );
+  displayAgentAt(
+    checkpoint4,
+    Math.random() * (STAGE_WIDTH - TARGET_WIDTH),
+    Math.random() *
+      (STAGE_HEIGHT - (checkpoint1.height / checkpoint1.width) * TARGET_WIDTH),
+    TARGET_WIDTH
+  );
+  displayAgentAt(agent, 0, 0, AGENT_WIDTH);
 };
 
 const reset = () => {
-  //app.ticker.destroy();
-  console.log(app.stage.children);
   app.stage.removeChildren();
-  console.log(app.stage.children);
   app.render();
   displayAgents();
 };
@@ -97,30 +124,7 @@ onMounted(async () => {
 <template>
   <main>
     <div ref="canvas" class="canvas"></div>
-    <button
-      @click="
-        moveAgent([
-          {
-            x: checkpoint1.x,
-            y: checkpoint1.y,
-          },
-          {
-            x: checkpoint2.x,
-            y: checkpoint2.y,
-          },
-          {
-            x: checkpoint3.x,
-            y: checkpoint3.y,
-          },
-          {
-            x: checkpoint4.x,
-            y: checkpoint4.y,
-          },
-        ])
-      "
-    >
-      C'est parti !
-    </button>
+    <button @click="moveAgent">C'est parti !</button>
     <button @click="reset">Reset</button>
   </main>
 </template>
