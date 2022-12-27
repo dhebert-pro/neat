@@ -4,12 +4,11 @@ import type Position from "./Position";
 export default class Agent {
   sprite: Sprite;
   position: Position;
-  score: number;
+  score: number = 0;
 
   constructor(sprite: Sprite, position: Position) {
     this.sprite = sprite;
     this.position = position;
-    this.score = 0;
   }
 
   setPosX = (posX: number) => {

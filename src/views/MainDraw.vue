@@ -3,6 +3,8 @@ import { Application, Assets, Sprite, type ICanvas, Ticker } from "pixi.js";
 import { ref, onMounted } from "vue";
 import Position from "@/model/Position";
 import Agent from "@/model/Agent";
+import type Genome from "@/model/Genome";
+import Neat from "@/model/Neat";
 
 const SPEED = 10;
 const STAGE_WIDTH = 800;
@@ -125,6 +127,12 @@ const reset = () => {
   displayAgents();
 };
 
+const launchAI = () => {
+  const neat: Neat = new Neat(3, 3, 100);
+  const genome: Genome = neat.empty_genome();
+  console.log("genome", genome.nodes);
+};
+
 onMounted(async () => {
   app = new Application({
     backgroundColor: "#ffffff",
@@ -139,6 +147,7 @@ onMounted(async () => {
   <main>
     <div ref="canvas" class="canvas"></div>
     <button @click="moveAgent">C'est parti !</button>
+    <button @click="launchAI">Launch AI</button>
     <button @click="reset">Reset</button>
   </main>
 </template>
