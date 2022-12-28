@@ -9,6 +9,17 @@ export default class Neat {
   output_size: number = 0;
   max_clients: number = 0;
 
+  c1: number = 1;
+  c2: number = 1;
+  c3: number = 1;
+  weight_shift_strength: number = 0.3;
+  weight_random_strength: number = 1;
+  probability_mutate_link = 0.4;
+  probability_mutate_node = 0.4;
+  probability_mutate_weight_shift = 0.4;
+  probability_mutate_weight_random = 0.4;
+  probability_mutate_toggle_link = 0.4;
+
   constructor(input_size: number, output_size: number, clients: number) {
     this.reset(input_size, output_size, clients);
   }
@@ -16,7 +27,7 @@ export default class Neat {
   empty_genome = () => {
     const g: Genome = new Genome(this);
     for (let i = 0; i < this.input_size + this.output_size; i++) {
-      g.nodes.push(this.getNodeById(i + 1));
+      this.getNodeById(i + 1).addToList(g.nodes);
     }
 
     return g;
@@ -59,7 +70,7 @@ export default class Neat {
       connectionGene.innovationNumber = existingConnectionGene.innovationNumber;
     } else {
       connectionGene.innovationNumber = this.all_connections.length + 1;
-      this.all_connections.push(connectionGene);
+      connectionGene.addToList(this.all_connections);
     }
 
     return connectionGene;
@@ -67,7 +78,7 @@ export default class Neat {
 
   getNode = () => {
     const nodeGene = new NodeGene(this.all_nodes.length + 1);
-    this.all_nodes.push(nodeGene);
+    nodeGene.addToList(this.all_nodes);
     return nodeGene;
   };
 

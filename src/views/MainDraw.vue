@@ -76,7 +76,7 @@ const displayAgentAt = (
   posY: number,
   width: number
 ) => {
-  const originalWidth = sprite.width;
+  const originalWidth: number = sprite.width;
   sprite.width = width;
   sprite.x = posX;
   sprite.y = posY;
@@ -130,7 +130,10 @@ const reset = () => {
 const launchAI = () => {
   const neat: Neat = new Neat(3, 3, 100);
   const genome: Genome = neat.empty_genome();
-  console.log("genome", genome.nodes);
+  for (let i = 0; i < 100; i++) {
+    genome.mutate();
+  }
+  console.log("New Genome", genome);
 };
 
 onMounted(async () => {
