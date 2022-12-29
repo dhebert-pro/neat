@@ -1,6 +1,6 @@
 import type Agent from "./Agent";
 
-export default class Generation {
+export default class Selector {
   agents: Agent[] = [];
 
   addAgent = (agent: Agent) => {

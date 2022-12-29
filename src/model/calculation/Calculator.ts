@@ -1,6 +1,6 @@
-import type ConnectionGene from "./ConnectionGene";
-import type Genome from "./Genome";
-import type NodeGene from "./NodeGene";
+import type ConnectionGene from "../genome/ConnectionGene";
+import type Genome from "../genome/Genome";
+import type NodeGene from "../genome/NodeGene";
 import Node from "./Node";
 import Connection from "./Connection";
 

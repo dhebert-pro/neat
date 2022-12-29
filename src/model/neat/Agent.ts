@@ -1,5 +1,5 @@
 import type { Sprite } from "pixi.js";
-import type Position from "./Position";
+import type Position from "../game/Position";
 
 export default class Agent {
   sprite: Sprite;

@@ -1,6 +1,6 @@
-import ConnectionGene from "./ConnectionGene";
-import Genome from "./Genome";
-import NodeGene from "./NodeGene";
+import ConnectionGene from "../genome/ConnectionGene";
+import Genome from "../genome/Genome";
+import NodeGene from "../genome/NodeGene";
 
 export default class Neat {
   all_connections: ConnectionGene[] = [];
