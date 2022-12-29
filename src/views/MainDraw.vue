@@ -134,6 +134,8 @@ const launchAI = () => {
     genome.mutate();
   }
   console.log("New Genome", genome);
+  genome.generateCalculator();
+  console.log("Output", genome.calculate([1, 1, 1]));
 };
 
 onMounted(async () => {

@@ -20,7 +20,7 @@ export default class Gene {
     for (index; index < genes.length; index++) {
       const gene: Gene = genes[index];
       const innov = gene.innovationNumber;
-      if (gene.innovationNumber < innov) {
+      if (this.innovationNumber < innov) {
         break;
       }
     }
