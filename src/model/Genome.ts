@@ -23,11 +23,16 @@ export default class Genome {
 
   distance = (g2: Genome): number => {
     const g1: Genome = this;
-
-    const highest_innovation_gene1: number =
-      g1.connections[g1.connections.length - 1].innovationNumber;
-    const highest_innovation_gene2: number =
-      g2.connections[g2.connections.length - 1].innovationNumber;
+    let highest_innovation_gene1: number = 0;
+    if (g1.connections.length !== 0) {
+      highest_innovation_gene1 =
+        g1.connections[g1.connections.length - 1].innovationNumber;
+    }
+    let highest_innovation_gene2: number = 0;
+    if (g2.connections.length !== 0) {
+      highest_innovation_gene2 =
+        g2.connections[g2.connections.length - 1].innovationNumber;
+    }
 
     if (highest_innovation_gene1 < highest_innovation_gene2) {
       return g2.distance(g1);

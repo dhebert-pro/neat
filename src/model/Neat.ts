@@ -55,6 +55,7 @@ export default class Neat {
 
   static getConnectionFromConnection = (conG: ConnectionGene) => {
     const c: ConnectionGene = new ConnectionGene(conG.from, conG.to);
+    c.innovationNumber = conG.innovationNumber;
     c.weight = conG.weight;
     c.enabled = conG.enabled;
     return c;
