@@ -12,6 +12,7 @@ export default class Neat {
   c1: number = 1;
   c2: number = 1;
   c3: number = 1;
+  cp: number = 4;
   weight_shift_strength: number = 0.3;
   weight_random_strength: number = 1;
   probability_mutate_link = 0.4;

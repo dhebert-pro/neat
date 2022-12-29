@@ -5,6 +5,7 @@ import Position from "@/model/game/Position";
 import Agent from "@/model/neat/Agent";
 import type Genome from "@/model/genome/Genome";
 import Neat from "@/model/neat/Neat";
+import Client from "@/model/neat/Client";
 
 const SPEED = 10;
 const STAGE_WIDTH = 800;
@@ -130,12 +131,14 @@ const reset = () => {
 const launchAI = () => {
   const neat: Neat = new Neat(3, 3, 100);
   const genome: Genome = neat.empty_genome();
+  const c: Client = new Client();
+  c.genome = genome;
   for (let i = 0; i < 100; i++) {
     genome.mutate();
   }
   console.log("New Genome", genome);
-  genome.generateCalculator();
-  console.log("Output", genome.calculate([1, 1, 1]));
+  c.generateCalculator();
+  console.log("Output", c.calculate([1, 1, 1]));
 };
 
 onMounted(async () => {

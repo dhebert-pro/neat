@@ -2,24 +2,11 @@ import ConnectionGene from "./ConnectionGene";
 import Neat from "../neat/Neat";
 import type NodeGene from "./NodeGene";
 import Gene from "./Gene";
-import Calculator from "../calculation/Calculator";
 
 export default class Genome {
   connections: ConnectionGene[] = [];
   nodes: NodeGene[] = [];
   neat: Neat;
-  calculator: Calculator | undefined;
-
-  generateCalculator = () => {
-    this.calculator = new Calculator(this);
-  };
-
-  calculate = (inputs: number[]) => {
-    if (this.calculator) {
-      return this.calculator.calculate(inputs);
-    }
-    return null;
-  };
 
   distance = (g2: Genome): number => {
     const g1: Genome = this;
