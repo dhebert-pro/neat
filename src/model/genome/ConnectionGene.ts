@@ -6,6 +6,7 @@ export default class ConnectionGene extends Gene {
   to: NodeGene;
   weight: number = 0;
   enabled: boolean = true;
+  replaceIndex: number = 0;
 
   constructor(from: NodeGene, to: NodeGene) {
     super(0);

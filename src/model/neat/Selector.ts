@@ -1,35 +1,30 @@
-import type Agent from "./Agent";
+export default class RandomSelector<T> {
+  objects: T[] = [];
+  scores: number[] = [];
 
-export default class Selector {
-  agents: Agent[] = [];
+  totalScore: number = 0;
 
-  addAgent = (agent: Agent) => {
-    this.agents.push(agent);
+  add = (element: T, score: number) => {
+    this.objects.push(element);
+    this.scores.push(score);
+    this.totalScore += score;
   };
 
-  getTotalScore = () => {
-    return this.agents.reduce(
-      (currentScore, currentAgent) => currentScore + currentAgent.score,
-      0
-    );
-  };
-
-  sortByScore = () => {
-    this.agents = this.agents.sort((a: Agent, b: Agent) =>
-      a.score > b.score ? 1 : a.score === b.score ? 0 : -1
-    );
-  };
-
-  getSelectedAgent = () => {
-    const totalScore = this.getTotalScore();
-    const randomScore = Math.random() * totalScore;
-    let currentScore = 0;
-    for (const agent of this.agents) {
-      currentScore += agent.score;
-      if (currentScore >= randomScore) {
-        return agent.position.x;
+  random = () => {
+    const v: number = Math.random() * this.totalScore;
+    let c: number = 0;
+    for (let i: number = 0; i < this.objects.length; i++) {
+      c += this.scores[i];
+      if (c >= v) {
+        return this.objects[i];
       }
     }
     return null;
+  };
+
+  reset = () => {
+    this.objects = [];
+    this.scores = [];
+    this.totalScore = 0;
   };
 }

@@ -47,19 +47,19 @@ export default class Species {
     if (this.clients.length) {
       this.representative =
         this.clients[Math.floor(Math.random() * this.clients.length)];
+      this.goExtinct();
+      this.clients = [this.representative];
+      this.representative.species = this;
+      this.score = 0;
     }
-    this.goExtinct();
-    this.clients = [this.representative];
-    this.representative.species = this;
-    this.score = 0;
   };
 
   kill = (percentage: number) => {
     this.clients.sort(
       (client1: Client, client2: Client) => client1.score - client2.score
     );
-
-    for (let i: number = 0; i < percentage * this.clients.length; i++) {
+    const amount = Math.floor(percentage * this.clients.length);
+    for (let i: number = 0; i < amount; i++) {
       this.clients[0].species = undefined;
       this.clients.shift();
     }
@@ -70,7 +70,7 @@ export default class Species {
       this.clients[Math.floor(Math.random() * this.clients.length)];
     const client2 =
       this.clients[Math.floor(Math.random() * this.clients.length)];
-    if (client1.genome === null || client2.genome === null) {
+    if (!client1.genome || !client2.genome) {
       throw new Error("Clients has not genome");
     }
     if (client1.score > client2.score) {

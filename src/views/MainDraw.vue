@@ -129,16 +129,22 @@ const reset = () => {
 };
 
 const launchAI = () => {
-  const neat: Neat = new Neat(3, 3, 100);
-  const genome: Genome = neat.empty_genome();
-  const c: Client = new Client();
-  c.genome = genome;
-  for (let i = 0; i < 100; i++) {
-    genome.mutate();
+  const neat: Neat = new Neat(10, 1, 1000);
+  console.log("Neat avant évolution", neat);
+  const input: number[] = [];
+  for (let i: number = 0; i < 10; i++) {
+    input[i] = Math.random();
   }
-  console.log("New Genome", genome);
-  c.generateCalculator();
-  console.log("Output", c.calculate([1, 1, 1]));
+  for (let j: number = 0; j < 100; j++) {
+    neat.clients.forEach((client: Client) => {
+      const score: number = client.calculate(input)[0];
+      client.score = score;
+    });
+
+    neat.evolve();
+    console.log(`Etape ${j}`);
+    console.log(`Nombre d'espèces`, neat.species.length);
+  }
 };
 
 onMounted(async () => {

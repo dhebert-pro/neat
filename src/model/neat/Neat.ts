@@ -1,6 +1,9 @@
 import ConnectionGene from "../genome/ConnectionGene";
 import Genome from "../genome/Genome";
 import NodeGene from "../genome/NodeGene";
+import Client from "./Client";
+import RandomSelector from "./Selector";
+import Species from "./Species";
 
 export default class Neat {
   all_connections: ConnectionGene[] = [];
@@ -9,12 +12,16 @@ export default class Neat {
   output_size: number = 0;
   max_clients: number = 0;
 
+  clients: Client[] = [];
+  species: Species[] = [];
+
   c1: number = 1;
   c2: number = 1;
   c3: number = 1;
   cp: number = 4;
   weight_shift_strength: number = 0.3;
   weight_random_strength: number = 1;
+  survivors = 0.8;
   probability_mutate_link = 0.4;
   probability_mutate_node = 0.4;
   probability_mutate_weight_shift = 0.4;
@@ -34,12 +41,89 @@ export default class Neat {
     return g;
   };
 
+  evolve = () => {
+    this.genSpecies();
+    this.kill();
+    this.removeExtinctSpecies();
+    this.reproduce();
+    this.mutate();
+    this.clients.forEach((client: Client) => {
+      client.generateCalculator();
+    });
+  };
+
+  genSpecies = () => {
+    this.species.forEach((species: Species) => {
+      species.reset();
+    });
+
+    for (let i: number = 0; i < this.clients.length; i++) {
+      const client = this.clients[i];
+      if (client.species) {
+        continue;
+      }
+      let found: boolean = false;
+      for (let j: number = 0; j < this.species.length; j++) {
+        const species = this.species[j];
+        if (species.addIfClose(client)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        this.species.push(new Species(client));
+      }
+    }
+    this.species.forEach((species: Species) => {
+      species.evaluateScore();
+    });
+  };
+
+  kill = () => {
+    this.species.forEach((species: Species) => {
+      species.kill(1 - this.survivors);
+    });
+  };
+
+  removeExtinctSpecies = () => {
+    for (let i = this.species.length - 1; i >= 0; i--) {
+      const species = this.species[i];
+      if (species.size() <= 1) {
+        species.goExtinct();
+        this.species.splice(i, 1);
+      }
+    }
+  };
+
+  reproduce = () => {
+    const selector: RandomSelector<Species> = new RandomSelector<Species>();
+    this.species.forEach((species: Species) => {
+      selector.add(species, species.score);
+    });
+    this.clients.forEach((client: Client) => {
+      if (!client.species) {
+        const species: Species | null = selector.random();
+        if (species) {
+          client.genome = species.breed();
+          species.forceAdd(client);
+        }
+      }
+    });
+  };
+
+  mutate = () => {
+    this.clients.forEach((client: Client) => {
+      client.mutate();
+    });
+  };
+
   reset = (input_size: number, output_size: number, clients: number) => {
     this.input_size = input_size;
     this.output_size = output_size;
     this.max_clients = clients;
     this.all_connections = [];
     this.all_nodes = [];
+    this.clients = [];
 
     for (let i = 0; i < input_size; i++) {
       const n: NodeGene = this.getNode();
@@ -52,7 +136,16 @@ export default class Neat {
       n.x = 0.9;
       n.y = (i + 1) / (output_size + 1);
     }
+
+    for (let i = 0; i < this.max_clients; i++) {
+      const client: Client = new Client();
+      client.genome = this.empty_genome();
+      client.generateCalculator();
+      this.clients.push(client);
+    }
   };
+
+  getClient = (index: number) => this.clients[index];
 
   static getConnectionFromConnection = (conG: ConnectionGene) => {
     const c: ConnectionGene = new ConnectionGene(conG.from, conG.to);
@@ -76,6 +169,24 @@ export default class Neat {
     }
 
     return connectionGene;
+  };
+
+  setReplaceIndex = (node1: NodeGene, node2: NodeGene, index: number) => {
+    const existingConnectionGene: ConnectionGene | undefined =
+      this.all_connections.find((connection: ConnectionGene) =>
+        connection.equals(new ConnectionGene(node1, node2))
+      );
+    if (existingConnectionGene) {
+      existingConnectionGene.replaceIndex = index;
+    }
+  };
+  getReplaceIndex = (node1: NodeGene, node2: NodeGene) => {
+    const con: ConnectionGene = new ConnectionGene(node1, node2);
+    const data: ConnectionGene | undefined = this.all_connections.find(
+      (connection: ConnectionGene) => connection.equals(con)
+    );
+    if (!data) return 0;
+    return data.replaceIndex;
   };
 
   getNode = () => {

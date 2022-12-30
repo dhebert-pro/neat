@@ -20,7 +20,6 @@ export default class Genome {
       highest_innovation_gene2 =
         g2.connections[g2.connections.length - 1].innovationNumber;
     }
-
     if (highest_innovation_gene1 < highest_innovation_gene2) {
       return g2.distance(g1);
     }
@@ -59,7 +58,7 @@ export default class Genome {
         index_g1++;
       }
     }
-    weight_diff /= similars;
+    weight_diff /= Math.max(1, similars);
     excess = g1.connections.length - index_g1;
 
     let N: number = Math.max(g1.connections.length, g2.connections.length);
@@ -174,16 +173,24 @@ export default class Genome {
     const con: ConnectionGene = Gene.getRandomElement(
       this.connections
     ) as ConnectionGene;
-    if (con === null) {
+    if (!con) {
       return;
     }
 
     const from: NodeGene = con.from;
     const to: NodeGene = con.to;
 
-    const middle: NodeGene = this.neat.getNode();
-    middle.x = (from.x + to.x) / 2;
-    middle.y = (from.y + to.y) / 2 + Math.random() * 0.1 - 0.05;
+    const replaceIndex: number = this.neat.getReplaceIndex(from, to);
+    let middle: NodeGene;
+
+    if (replaceIndex === 0) {
+      middle = this.neat.getNode();
+      middle.x = (from.x + to.x) / 2;
+      middle.y = (from.y + to.y) / 2 + Math.random() * 0.1 - 0.05;
+      this.neat.setReplaceIndex(from, to, middle.innovationNumber);
+    } else {
+      middle = this.neat.getNodeById(replaceIndex);
+    }
 
     const con1: ConnectionGene = this.neat.getConnection(from, middle);
     const con2: ConnectionGene = this.neat.getConnection(middle, to);
@@ -203,7 +210,7 @@ export default class Genome {
     const con: ConnectionGene = Gene.getRandomElement(
       this.connections
     ) as ConnectionGene;
-    if (con != null) {
+    if (con) {
       con.weight =
         con.weight + (Math.random() * 2 - 1) * this.neat.weight_shift_strength;
     }
@@ -213,7 +220,7 @@ export default class Genome {
     const con: ConnectionGene = Gene.getRandomElement(
       this.connections
     ) as ConnectionGene;
-    if (con != null) {
+    if (con) {
       con.weight = (Math.random() * 2 - 1) * this.neat.weight_random_strength;
     }
   };
@@ -222,7 +229,7 @@ export default class Genome {
     const con: ConnectionGene = Gene.getRandomElement(
       this.connections
     ) as ConnectionGene;
-    if (con != null) {
+    if (con) {
       con.enabled = !con.enabled;
     }
   };

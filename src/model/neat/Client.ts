@@ -17,12 +17,13 @@ export default class Client {
     if (this.calculator) {
       return this.calculator.calculate(inputs);
     }
-    return null;
+    return [];
   };
 
   distance = (other: Client) => {
     if (this.genome && other.genome) {
-      return this.genome.distance(other.genome);
+      const distance = this.genome.distance(other.genome);
+      return distance;
     }
     return 0;
   };
