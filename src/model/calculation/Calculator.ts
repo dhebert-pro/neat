@@ -47,7 +47,9 @@ export default class Calculator {
 
   calculate = (inputs: number[]) => {
     if (inputs.length !== this.inputNodes.length) {
-      throw new Error("Nombre d'entrée différent pour le calcul");
+      throw new Error(
+        `Nombre d'entrée différent pour le calcul (${inputs.length} au lieu de ${this.inputNodes.length})`
+      );
     }
     for (let i = 0; i < this.inputNodes.length; i++) {
       this.inputNodes[i].output = inputs[i];
