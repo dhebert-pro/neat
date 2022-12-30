@@ -3,9 +3,8 @@ import { Application, Assets, Sprite, type ICanvas, Ticker } from "pixi.js";
 import { ref, onMounted } from "vue";
 import Position from "@/model/game/Position";
 import Agent from "@/model/neat/Agent";
-import type Genome from "@/model/genome/Genome";
 import Neat from "@/model/neat/Neat";
-import Client from "@/model/neat/Client";
+import type Client from "@/model/neat/Client";
 
 const SPEED = 10;
 const STAGE_WIDTH = 800;
@@ -135,15 +134,19 @@ const launchAI = () => {
   for (let i: number = 0; i < 10; i++) {
     input[i] = Math.random();
   }
-  for (let j: number = 0; j < 100; j++) {
+  for (let j: number = 0; j < 1000; j++) {
     neat.clients.forEach((client: Client) => {
       const score: number = client.calculate(input)[0];
       client.score = score;
     });
-
+    neat.clients.sort(
+      (client1: Client, client2: Client) => client1.score - client2.score
+    );
     neat.evolve();
     console.log(`Etape ${j}`);
     console.log(`Nombre d'espèces`, neat.species.length);
+    console.log("Meilleur individu", neat.clients[neat.clients.length - 1]);
+    console.log("Réseau de neurones", neat);
   }
 };
 

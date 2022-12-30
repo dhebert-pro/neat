@@ -22,11 +22,11 @@ export default class Neat {
   weight_shift_strength: number = 0.3;
   weight_random_strength: number = 1;
   survivors = 0.8;
-  probability_mutate_link = 0.4;
-  probability_mutate_node = 0.4;
-  probability_mutate_weight_shift = 0.4;
-  probability_mutate_weight_random = 0.4;
-  probability_mutate_toggle_link = 0.4;
+  probability_mutate_link = 0.02;
+  probability_mutate_node = 0.02;
+  probability_mutate_weight_shift = 0.02;
+  probability_mutate_weight_random = 0.02;
+  probability_mutate_toggle_link = 0.02;
 
   constructor(input_size: number, output_size: number, clients: number) {
     this.reset(input_size, output_size, clients);

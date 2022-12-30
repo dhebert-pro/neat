@@ -83,4 +83,11 @@ export default class Species {
   };
 
   size = () => this.clients.length;
+
+  getBestClient = () => {
+    this.clients.sort(
+      (client1: Client, client2: Client) => client1.score - client2.score
+    );
+    return this.clients[this.clients.length - 1];
+  };
 }
