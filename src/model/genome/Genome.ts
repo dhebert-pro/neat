@@ -66,9 +66,9 @@ export default class Genome {
       N = 1;
     }
     return (
-      (this.neat.c1 * disjoints) / N +
-      (this.neat.c2 * excess) / N +
-      this.neat.c3 * weight_diff
+      (this.neat.DISJOINTS_FACTOR * disjoints) / N +
+      (this.neat.EXCESS_FACTOR * excess) / N +
+      this.neat.SIMILAR_FACTOR * weight_diff
     );
   };
 
@@ -123,19 +123,19 @@ export default class Genome {
   };
 
   mutate = () => {
-    if (Math.random() < this.neat.probability_mutate_link) {
+    if (Math.random() < this.neat.PROBABILITY_MUTATE_LINK) {
       this.mutate_link();
     }
-    if (Math.random() < this.neat.probability_mutate_node) {
+    if (Math.random() < this.neat.PROBABILITY_MUTATE_NODE) {
       this.mutate_node();
     }
-    if (Math.random() < this.neat.probability_mutate_toggle_link) {
+    if (Math.random() < this.neat.PROBABILITY_MUTATE_TOGGLE_LINK) {
       this.mutate_link_toggle();
     }
-    if (Math.random() < this.neat.probability_mutate_weight_random) {
+    if (Math.random() < this.neat.PROBABILITY_MUTATE_WEIGHT_RANDOM) {
       this.mutate_weight_random();
     }
-    if (Math.random() < this.neat.probability_mutate_weight_shift) {
+    if (Math.random() < this.neat.PROBABILITY_MUTATE_WEIGHT_SHIFT) {
       this.mutate_weight_shift();
     }
   };
@@ -162,7 +162,7 @@ export default class Genome {
       }
 
       con = this.neat.getConnection(con.from, con.to);
-      con.weight = (Math.random() * 2 - 1) * this.neat.weight_random_strength;
+      con.weight = (Math.random() * 2 - 1) * this.neat.WEIGHT_RANDOM_STRENGTH;
 
       con.addSortedToList(this.connections);
       return;
@@ -212,7 +212,7 @@ export default class Genome {
     ) as ConnectionGene;
     if (con) {
       con.weight =
-        con.weight + (Math.random() * 2 - 1) * this.neat.weight_shift_strength;
+        con.weight + (Math.random() * 2 - 1) * this.neat.WEIGHT_SHIFT_STRENGTH;
     }
   };
 
@@ -221,7 +221,7 @@ export default class Genome {
       this.connections
     ) as ConnectionGene;
     if (con) {
-      con.weight = (Math.random() * 2 - 1) * this.neat.weight_random_strength;
+      con.weight = (Math.random() * 2 - 1) * this.neat.WEIGHT_RANDOM_STRENGTH;
     }
   };
 

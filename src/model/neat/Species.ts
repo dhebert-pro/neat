@@ -16,7 +16,9 @@ export default class Species {
     if (!client.genome) {
       return false;
     }
-    if (client.distance(this.representative) < client.genome.neat.cp) {
+    if (
+      client.distance(this.representative) < client.genome.neat.MIN_SPECIATION
+    ) {
       client.species = this;
       this.clients.push(client);
       return true;

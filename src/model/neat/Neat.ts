@@ -15,18 +15,18 @@ export default class Neat {
   clients: Client[] = [];
   species: Species[] = [];
 
-  c1: number = 1;
-  c2: number = 1;
-  c3: number = 1;
-  cp: number = 4;
-  weight_shift_strength: number = 0.3;
-  weight_random_strength: number = 1;
-  survivors = 0.8;
-  probability_mutate_link = 0.02;
-  probability_mutate_node = 0.02;
-  probability_mutate_weight_shift = 0.02;
-  probability_mutate_weight_random = 0.02;
-  probability_mutate_toggle_link = 0.02;
+  DISJOINTS_FACTOR: number = 1;
+  EXCESS_FACTOR: number = 1;
+  SIMILAR_FACTOR: number = 1;
+  MIN_SPECIATION: number = 4;
+  WEIGHT_SHIFT_STRENGTH: number = 0.3;
+  WEIGHT_RANDOM_STRENGTH: number = 1;
+  SURVIVE_RATE = 0.8;
+  PROBABILITY_MUTATE_LINK = 0.02;
+  PROBABILITY_MUTATE_NODE = 0.02;
+  PROBABILITY_MUTATE_WEIGHT_SHIFT = 0.02;
+  PROBABILITY_MUTATE_WEIGHT_RANDOM = 0.02;
+  PROBABILITY_MUTATE_TOGGLE_LINK = 0.02;
 
   constructor(input_size: number, output_size: number, clients: number) {
     this.reset(input_size, output_size, clients);
@@ -81,7 +81,7 @@ export default class Neat {
 
   kill = () => {
     this.species.forEach((species: Species) => {
-      species.kill(1 - this.survivors);
+      species.kill(1 - this.SURVIVE_RATE);
     });
   };
 
