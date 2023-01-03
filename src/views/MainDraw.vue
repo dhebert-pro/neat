@@ -12,7 +12,7 @@ const STAGE_HEIGHT = 600;
 const TARGET_WIDTH = 50;
 const AGENT_WIDTH = 50;
 const AGENT_DELAY = 2000;
-const NUMBER_AGENT = 100;
+const NUMBER_AGENT = 1000;
 
 const neat: Neat = new Neat(16, 2, NUMBER_AGENT);
 
