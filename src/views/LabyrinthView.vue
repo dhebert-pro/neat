@@ -195,8 +195,15 @@ const playGame = (gameState: GameState) => {
   player.client.score = score;
 };
 
-const simulate = (gameState: GameState) => {
+const simulateGame = (gameState: GameState) => {
   playGame(gameState);
+};
+
+const simulateClient = (client: Client, generation: Generation) => {
+  const player = new Player(client);
+  const gameState: GameState = new GameState(player, generation.params);
+  generation.gameStates.push(gameState);
+  simulateGame(gameState);
 };
 
 const createGeneration = (number: number) => {
@@ -205,10 +212,7 @@ const createGeneration = (number: number) => {
   generation.number = number;
   data.generations[data.generationNumber] = generation;
   neat.clients.forEach((client: Client) => {
-    const player = new Player(client);
-    const gameState: GameState = new GameState(player, generation.params);
-    generation.gameStates.push(gameState);
-    simulate(gameState);
+    simulateClient(client, generation);
   });
 };
 
