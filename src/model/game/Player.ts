@@ -4,7 +4,9 @@ import type Cell from "./Cell";
 import DirectionEnum from "./DirectionEnum";
 import type Action from "./action/Action";
 import ActionMove from "./action/ActionMove";
+import ActionMark from "./action/ActionMark";
 import ActionStay from "./action/ActionStay";
+import GameTokenEnum from "./GameTokenEnum";
 
 export default class Player {
   cell?: Cell;
@@ -16,74 +18,41 @@ export default class Player {
 
   getPosition = () => this.cell?.position;
 
-  canGoNorth = () => !this.cell?.hasWallNorth;
-  canGoSouth = () => !this.cell?.hasWallSouth;
-  canGoEast = () => !this.cell?.hasWallEast;
-  canGoWest = () => !this.cell?.hasWallWest;
+  canGo = (direction: DirectionEnum) => !this.cell?.hasWall(direction);
+  canEnd = (direction: DirectionEnum) =>
+    this.canGo(direction) && this.cell?.getCell(direction)?.isEnd();
 
-  canEndNorth = () => this.canGoNorth() && this.cell?.northCell?.isEnd();
-  canEndSouth = () => this.canGoSouth() && this.cell?.southCell?.isEnd();
-  canEndEast = () => this.canGoEast() && this.cell?.eastCell?.isEnd();
-  canEndWest = () => this.canGoWest() && this.cell?.westCell?.isEnd();
+  hasMarker = (direction: DirectionEnum) =>
+    this.canGo(direction) &&
+    this.cell?.getCell(direction)?.hasToken(GameTokenEnum.MARKER);
 
-  goNorth = () => {
-    if (!this.canGoNorth()) {
-      throw new Error("Player can't go north");
+  go = (direction: DirectionEnum) => {
+    if (!this.canGo(direction)) {
+      throw new Error(`Player can't go ${direction}`);
     }
     if (!this.cell) {
       throw new Error("Player is not on the maze");
     }
-    if (!this.cell.northCell) {
+    const destinationCell: Cell | undefined = this.cell.getCell(direction);
+    if (!destinationCell) {
       throw new Error("Destination cell not exists");
     }
-    const destinationCell: Cell = this.cell?.northCell;
     this.cell.removePlayer();
     destinationCell.addPlayer();
   };
 
-  goSouth = () => {
-    if (!this.canGoSouth()) {
-      throw new Error("Player can't go south");
+  placeMarker = (direction: DirectionEnum) => {
+    if (!this.canGo(direction)) {
+      throw new Error(`Player can't place marker in ${direction} cell`);
     }
     if (!this.cell) {
       throw new Error("Player is not on the maze");
     }
-    if (!this.cell.southCell) {
+    const destinationCell: Cell | undefined = this.cell.getCell(direction);
+    if (!destinationCell) {
       throw new Error("Destination cell not exists");
     }
-    const destinationCell: Cell = this.cell?.southCell;
-    this.cell.removePlayer();
-    destinationCell.addPlayer();
-  };
-
-  goEast = () => {
-    if (!this.canGoEast()) {
-      throw new Error("Player can't go east");
-    }
-    if (!this.cell) {
-      throw new Error("Player is not on the maze");
-    }
-    if (!this.cell.eastCell) {
-      throw new Error("Destination cell not exists");
-    }
-    const destinationCell: Cell = this.cell?.eastCell;
-    this.cell.removePlayer();
-    destinationCell.addPlayer();
-  };
-
-  goWest = () => {
-    if (!this.canGoWest()) {
-      throw new Error("Player can't go west");
-    }
-    if (!this.cell) {
-      throw new Error("Player is not on the maze");
-    }
-    if (!this.cell.westCell) {
-      throw new Error("Destination cell not exists");
-    }
-    const destinationCell: Cell = this.cell?.westCell;
-    this.cell.removePlayer();
-    destinationCell.addPlayer();
+    this.cell.addMarker();
   };
 
   getPossibleActions = (gameState: GameState) => {
@@ -92,6 +61,10 @@ export default class Player {
     const goEastAction: ActionMove = new ActionMove(DirectionEnum.EAST);
     const goWestAction: ActionMove = new ActionMove(DirectionEnum.WEST);
     const stayAction: ActionStay = new ActionStay();
+    const markNorthAction: ActionMark = new ActionMark(DirectionEnum.NORTH);
+    const markSouthAction: ActionMark = new ActionMark(DirectionEnum.SOUTH);
+    const markEastAction: ActionMark = new ActionMark(DirectionEnum.EAST);
+    const markWestAction: ActionMark = new ActionMark(DirectionEnum.WEST);
 
     const possibleActions: Action[] = [
       goNorthAction,
@@ -99,6 +72,10 @@ export default class Player {
       goEastAction,
       goWestAction,
       stayAction,
+      markNorthAction,
+      markSouthAction,
+      markEastAction,
+      markWestAction,
     ].filter((action: Action) => action.isPossible(gameState));
     return possibleActions;
   };

@@ -9,6 +9,7 @@ import Player from "@/model/game/Player";
 import type Action from "@/model/game/action/Action";
 import { ActionEnum } from "@/model/game/action/Action";
 import RandomUtil from "@/model/util/RandomUtil";
+import DirectionEnum from "@/model/game/DirectionEnum";
 
 interface Labyrinth {
   generationNumber: number;
@@ -30,6 +31,10 @@ interface Input {
   endSouth: number;
   endEast: number;
   endWest: number;
+  markerNorth: number;
+  markerSouth: number;
+  markerEast: number;
+  markerWest: number;
   bias: number;
 }
 
@@ -39,10 +44,14 @@ interface Output {
   EAST: number;
   WEST: number;
   STAY: number;
+  MARK_NORTH: number;
+  MARK_SOUTH: number;
+  MARK_EAST: number;
+  MARK_WEST: number;
 }
 
-let NB_INPUTS: number = 9;
-let NB_OUTPUTS: number = 5;
+let NB_INPUTS: number = 13;
+let NB_OUTPUTS: number = 9;
 let NB_AGENTS: number = 20;
 
 let neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
@@ -68,14 +77,18 @@ const calculateInput = (gameState: GameState) => {
   }
   const player: Player = gameState.player;
   const input: Input = {
-    wallNorth: player.canGoNorth() ? 1 : 0,
-    wallSouth: player.canGoSouth() ? 1 : 0,
-    wallEast: player.canGoEast() ? 1 : 0,
-    wallWest: player.canGoWest() ? 1 : 0,
-    endNorth: player.canEndNorth() ? 1 : 0,
-    endSouth: player.canEndSouth() ? 1 : 0,
-    endEast: player.canEndEast() ? 1 : 0,
-    endWest: player.canEndWest() ? 1 : 0,
+    wallNorth: player.canGo(DirectionEnum.NORTH) ? 0 : 1,
+    wallSouth: player.canGo(DirectionEnum.SOUTH) ? 0 : 1,
+    wallEast: player.canGo(DirectionEnum.EAST) ? 0 : 1,
+    wallWest: player.canGo(DirectionEnum.WEST) ? 0 : 1,
+    endNorth: player.canEnd(DirectionEnum.NORTH) ? 1 : 0,
+    endSouth: player.canEnd(DirectionEnum.SOUTH) ? 1 : 0,
+    endEast: player.canEnd(DirectionEnum.EAST) ? 1 : 0,
+    endWest: player.canEnd(DirectionEnum.WEST) ? 1 : 0,
+    markerNorth: player.hasMarker(DirectionEnum.NORTH) ? 1 : 0,
+    markerSouth: player.hasMarker(DirectionEnum.SOUTH) ? 1 : 0,
+    markerEast: player.hasMarker(DirectionEnum.EAST) ? 1 : 0,
+    markerWest: player.hasMarker(DirectionEnum.WEST) ? 1 : 0,
     bias: 1,
   };
   return input;
@@ -95,6 +108,10 @@ const calculateOutput = (gameState: GameState, input: Input) => {
     input.endSouth,
     input.endEast,
     input.endWest,
+    input.markerNorth,
+    input.markerSouth,
+    input.markerEast,
+    input.markerWest,
     input.bias,
   ]);
   const output: Output = {
@@ -103,6 +120,10 @@ const calculateOutput = (gameState: GameState, input: Input) => {
     [ActionEnum.EAST]: result[2],
     [ActionEnum.WEST]: result[3],
     [ActionEnum.STAY]: result[4],
+    [ActionEnum.MARK_NORTH]: result[5],
+    [ActionEnum.MARK_SOUTH]: result[6],
+    [ActionEnum.MARK_EAST]: result[7],
+    [ActionEnum.MARK_WEST]: result[8],
   };
 
   return output;

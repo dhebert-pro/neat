@@ -4,7 +4,7 @@ import type Player from "../Player";
 import type Action from "./Action";
 import { ActionEnum } from "./Action";
 
-export default class ActionMove implements Action {
+export default class ActionMark implements Action {
   direction: DirectionEnum;
 
   constructor(direction: DirectionEnum) {
@@ -37,32 +37,32 @@ export default class ActionMove implements Action {
     const player: Player = gameState.player;
     switch (this.direction) {
       case DirectionEnum.NORTH:
-        player.go(this.direction);
+        player.placeMarker(DirectionEnum.NORTH);
         break;
       case DirectionEnum.SOUTH:
-        player.go(this.direction);
+        player.placeMarker(DirectionEnum.SOUTH);
         break;
       case DirectionEnum.EAST:
-        player.go(this.direction);
+        player.placeMarker(DirectionEnum.EAST);
         break;
       case DirectionEnum.WEST:
-        player.go(this.direction);
+        player.placeMarker(DirectionEnum.WEST);
         break;
       default:
-        throw new Error("No direction for move action");
+        throw new Error("No direction for mark action");
     }
   };
 
   getType = () => {
     switch (this.direction) {
       case DirectionEnum.NORTH:
-        return ActionEnum.NORTH;
+        return ActionEnum.MARK_NORTH;
       case DirectionEnum.SOUTH:
-        return ActionEnum.SOUTH;
+        return ActionEnum.MARK_SOUTH;
       case DirectionEnum.EAST:
-        return ActionEnum.EAST;
+        return ActionEnum.MARK_EAST;
       case DirectionEnum.WEST:
-        return ActionEnum.WEST;
+        return ActionEnum.MARK_WEST;
       default:
         throw new Error("Type of action is unknown");
     }

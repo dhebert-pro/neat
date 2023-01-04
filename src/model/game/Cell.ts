@@ -48,27 +48,6 @@ export default class Cell {
     return result;
   };
 
-  textalize = () => {
-    const result: string[] = [];
-    result[0] = `8${this.hasWallNorth ? "8" : " "}8`;
-    result[1] = `${this.hasWallWest ? "8" : " "}${
-      this.tokens.includes(GameTokenEnum.START)
-        ? "S"
-        : this.tokens.includes(GameTokenEnum.END)
-        ? "E"
-        : " "
-    }${this.hasWallEast ? "8" : " "}`;
-    result[2] = `8${this.hasWallSouth ? "8" : " "}8`;
-    return result;
-  };
-
-  log = () => {
-    const logLines: string[] = this.textalize();
-    logLines.forEach((logLine) => {
-      console.log(logLine);
-    });
-  };
-
   getNbExits = () => {
     return (
       (this.hasWallNorth ? 0 : 1) +
@@ -78,8 +57,8 @@ export default class Cell {
     );
   };
 
-  createWall = (wall: DirectionEnum) => {
-    switch (wall) {
+  createWall = (direction: DirectionEnum) => {
+    switch (direction) {
       case DirectionEnum.NORTH:
         this.hasWallNorth = true;
         break;
@@ -95,13 +74,41 @@ export default class Cell {
     }
   };
 
+  hasWall = (direction: DirectionEnum) => {
+    switch (direction) {
+      case DirectionEnum.NORTH:
+        return this.hasWallNorth;
+      case DirectionEnum.SOUTH:
+        return this.hasWallSouth;
+      case DirectionEnum.WEST:
+        return this.hasWallWest;
+      case DirectionEnum.EAST:
+        return this.hasWallEast;
+    }
+  };
+
+  getCell = (direction: DirectionEnum) => {
+    switch (direction) {
+      case DirectionEnum.NORTH:
+        return this.northCell;
+      case DirectionEnum.SOUTH:
+        return this.southCell;
+      case DirectionEnum.WEST:
+        return this.westCell;
+      case DirectionEnum.EAST:
+        return this.eastCell;
+    }
+  };
+
   createWalls = (walls: DirectionEnum[]) => {
     walls.forEach((wall) => {
       this.createWall(wall);
     });
   };
 
-  isEnd = () => this.tokens.includes(GameTokenEnum.END);
+  hasToken = (token: GameTokenEnum) => this.tokens.includes(token);
+
+  isEnd = () => this.hasToken(GameTokenEnum.END);
 
   addToken = (token: GameTokenEnum) => {
     this.tokens.push(token);
@@ -128,6 +135,10 @@ export default class Cell {
     this.addToken(GameTokenEnum.END);
   };
 
+  addMarker = () => {
+    this.addToken(GameTokenEnum.MARKER);
+  };
+
   removePlayer = () => {
     if (this.board.player) {
       this.board.player.cell = undefined;
@@ -143,5 +154,26 @@ export default class Cell {
   removeEnd = () => {
     this.board.end = undefined;
     this.removeToken(GameTokenEnum.END);
+  };
+
+  textalize = () => {
+    const result: string[] = [];
+    result[0] = `8${this.hasWallNorth ? "8" : " "}8`;
+    result[1] = `${this.hasWallWest ? "8" : " "}${
+      this.tokens.includes(GameTokenEnum.START)
+        ? "S"
+        : this.tokens.includes(GameTokenEnum.END)
+        ? "E"
+        : " "
+    }${this.hasWallEast ? "8" : " "}`;
+    result[2] = `8${this.hasWallSouth ? "8" : " "}8`;
+    return result;
+  };
+
+  log = () => {
+    const logLines: string[] = this.textalize();
+    logLines.forEach((logLine) => {
+      console.log(logLine);
+    });
   };
 }
