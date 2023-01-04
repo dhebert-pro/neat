@@ -43,6 +43,8 @@ let NB_INPUTS: number = 9;
 let NB_OUTPUTS: number = 5;
 let NB_AGENTS: number = 20;
 
+let neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
+
 let data: Labyrinth = reactive({
   generations: [],
   generationNumber: 0,
@@ -50,7 +52,7 @@ let data: Labyrinth = reactive({
   meanScore: 0,
   worstScore: 0,
   speciesCount: 0,
-  enabled: true,
+  enabled: false,
 });
 
 const getGeneration = () => {
@@ -244,11 +246,13 @@ const nextGeneration = () => {
 };
 
 const createGeneration = (number: number) => {
-  const neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
   const generation: Generation = new Generation(neat);
   generation.number = number;
   data.generationNumber = number;
   data.speciesCount = neat.species.length;
+  if (data.generationNumber > 100) {
+    data.generations.shift();
+  }
   data.generations[data.generationNumber] = generation;
   neat.clients.forEach((client: Client) => {
     simulateClient(client, generation);
@@ -257,11 +261,21 @@ const createGeneration = (number: number) => {
   neat.evolve();
   setTimeout(() => {
     nextGeneration();
-  }, 500);
+  }, 10);
 };
 
 const stopSimulation = () => {
   data.enabled = false;
+};
+
+const resetSimulation = () => {
+  stopSimulation();
+  data.generations = [];
+  data.generationNumber = 0;
+  data.bestScore = 0;
+  data.meanScore = 0;
+  data.worstScore = 0;
+  data.speciesCount = 0;
 };
 
 const launchSimulation = () => {
@@ -272,7 +286,7 @@ const launchSimulation = () => {
 <template>
   <main class="main">
     <GenerationPanel
-      :number="getGeneration()?.number"
+      :number="data.generationNumber"
       :bestScore="data.bestScore"
       :meanScore="data.meanScore"
       :worstScore="data.worstScore"
@@ -281,6 +295,7 @@ const launchSimulation = () => {
   </main>
   <button @click="launchSimulation">Lancer la simulation</button>
   <button @click="stopSimulation">Stopper la simulation</button>
+  <button @click="resetSimulation">Réinitialiser la simulation</button>
 </template>
 
 <style scoped>
