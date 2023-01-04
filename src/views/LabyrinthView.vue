@@ -6,7 +6,8 @@ import Generation from "@/model/neat/Generation";
 import type Client from "@/model/neat/Client";
 import GameState from "@/model/game/GameState";
 import Player from "@/model/game/Player";
-import ActionEnum from "@/model/game/ActionEnum";
+import type Action from "@/model/game/action/Action";
+import { ActionEnum } from "@/model/game/action/Action";
 import RandomUtil from "@/model/util/RandomUtil";
 
 interface Labyrinth {
@@ -17,6 +18,7 @@ interface Labyrinth {
   worstScore: number;
   speciesCount: number;
   enabled: boolean;
+  oneStep: boolean;
 }
 
 interface Input {
@@ -53,6 +55,7 @@ let data: Labyrinth = reactive({
   worstScore: 0,
   speciesCount: 0,
   enabled: false,
+  oneStep: false,
 });
 
 const getGeneration = () => {
@@ -105,67 +108,20 @@ const calculateOutput = (gameState: GameState, input: Input) => {
   return output;
 };
 
-const getActionFromOutput = (output: Output, possibleActions: ActionEnum[]) => {
+const getActionFromOutput = (output: Output, possibleActions: Action[]) => {
   const possibleOutputValues: number[] = possibleActions.map(
-    (possibleAction: ActionEnum) => output[possibleAction]
+    (possibleAction: Action) => output[possibleAction.getType()]
   );
   const betterActionValue = Math.max(...possibleOutputValues);
-  const betterActions: ActionEnum[] = [];
-  if (
-    betterActionValue === output[ActionEnum.NORTH] &&
-    possibleActions.includes(ActionEnum.NORTH)
-  ) {
-    betterActions.push(ActionEnum.NORTH);
-  }
-  if (
-    betterActionValue === output[ActionEnum.SOUTH] &&
-    possibleActions.includes(ActionEnum.SOUTH)
-  ) {
-    betterActions.push(ActionEnum.SOUTH);
-  }
-  if (
-    betterActionValue === output[ActionEnum.EAST] &&
-    possibleActions.includes(ActionEnum.EAST)
-  ) {
-    betterActions.push(ActionEnum.EAST);
-  }
-  if (
-    betterActionValue === output[ActionEnum.WEST] &&
-    possibleActions.includes(ActionEnum.WEST)
-  ) {
-    betterActions.push(ActionEnum.WEST);
-  }
-  if (
-    betterActionValue === output[ActionEnum.STAY] &&
-    possibleActions.includes(ActionEnum.STAY)
-  ) {
-    betterActions.push(ActionEnum.STAY);
-  }
-  const action: ActionEnum = RandomUtil.getElement(betterActions);
+  const betterActions: Action[] = [];
+  possibleActions.forEach((possibleAction: Action) => {
+    if (betterActionValue === output[possibleAction.getType()]) {
+      betterActions.push(possibleAction);
+    }
+  });
+  const action: Action = RandomUtil.getElement(betterActions);
 
   return action;
-};
-
-const executeAction = (gameState: GameState, action: ActionEnum) => {
-  if (!gameState.player) {
-    throw new Error("Le joueur n'a pas été créé");
-  }
-  const player: Player = gameState.player;
-  switch (action) {
-    case ActionEnum.NORTH:
-      player.goNorth();
-      break;
-    case ActionEnum.SOUTH:
-      player.goSouth();
-      break;
-    case ActionEnum.EAST:
-      player.goEast();
-      break;
-    case ActionEnum.WEST:
-      player.goWest();
-      break;
-    default:
-  }
 };
 
 const getPossibleActions = (gameState: GameState) => {
@@ -173,7 +129,7 @@ const getPossibleActions = (gameState: GameState) => {
     throw new Error("Le joueur n'a pas été créé");
   }
   const player: Player = gameState.player;
-  return player.getPossibleActions();
+  return player.getPossibleActions(gameState);
 };
 
 const calculateScore = (gameState: GameState) => {
@@ -218,9 +174,9 @@ const playGame = (gameState: GameState) => {
   while (!gameState.isFinished()) {
     const input: Input = calculateInput(gameState);
     const output: Output = calculateOutput(gameState, input);
-    const possibleActions: ActionEnum[] = getPossibleActions(gameState);
-    const action: ActionEnum = getActionFromOutput(output, possibleActions);
-    executeAction(gameState, action);
+    const possibleActions: Action[] = getPossibleActions(gameState);
+    const action: Action = getActionFromOutput(output, possibleActions);
+    action.execute(gameState);
     gameState.remainingActions--;
   }
   const score = calculateScore(gameState);
@@ -258,10 +214,12 @@ const createGeneration = (number: number) => {
     simulateClient(client, generation);
   });
   calculateStats();
-  neat.evolve();
-  setTimeout(() => {
-    nextGeneration();
-  }, 10);
+  if (!data.oneStep) {
+    neat.evolve();
+    setTimeout(() => {
+      nextGeneration();
+    }, 10);
+  }
 };
 
 const stopSimulation = () => {
@@ -280,6 +238,13 @@ const resetSimulation = () => {
 
 const launchSimulation = () => {
   data.enabled = true;
+  data.oneStep = false;
+  nextGeneration();
+};
+
+const nextStepSimulation = () => {
+  data.enabled = true;
+  data.oneStep = true;
   nextGeneration();
 };
 </script>
@@ -294,6 +259,7 @@ const launchSimulation = () => {
     />
   </main>
   <button @click="launchSimulation">Lancer la simulation</button>
+  <button @click="nextStepSimulation">Lancer une génération</button>
   <button @click="stopSimulation">Stopper la simulation</button>
   <button @click="resetSimulation">Réinitialiser la simulation</button>
 </template>

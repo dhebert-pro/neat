@@ -1,6 +1,10 @@
 import type Client from "../neat/Client";
-import ActionEnum from "./ActionEnum";
+import type GameState from "./GameState";
 import type Cell from "./Cell";
+import DirectionEnum from "./DirectionEnum";
+import type Action from "./action/Action";
+import ActionMove from "./action/ActionMove";
+import ActionStay from "./action/ActionStay";
 
 export default class Player {
   cell?: Cell;
@@ -82,21 +86,20 @@ export default class Player {
     destinationCell.addPlayer();
   };
 
-  getPossibleActions = () => {
-    const possibleActions: ActionEnum[] = [];
-    if (this.canGoNorth()) {
-      possibleActions.push(ActionEnum.NORTH);
-    }
-    if (this.canGoSouth()) {
-      possibleActions.push(ActionEnum.SOUTH);
-    }
-    if (this.canGoEast()) {
-      possibleActions.push(ActionEnum.EAST);
-    }
-    if (this.canGoWest()) {
-      possibleActions.push(ActionEnum.WEST);
-    }
-    possibleActions.push(ActionEnum.STAY);
+  getPossibleActions = (gameState: GameState) => {
+    const goNorthAction: ActionMove = new ActionMove(DirectionEnum.NORTH);
+    const goSouthAction: ActionMove = new ActionMove(DirectionEnum.SOUTH);
+    const goEastAction: ActionMove = new ActionMove(DirectionEnum.EAST);
+    const goWestAction: ActionMove = new ActionMove(DirectionEnum.WEST);
+    const stayAction: ActionStay = new ActionStay();
+
+    const possibleActions: Action[] = [
+      goNorthAction,
+      goSouthAction,
+      goEastAction,
+      goWestAction,
+      stayAction,
+    ].filter((action: Action) => action.isPossible(gameState));
     return possibleActions;
   };
 }
