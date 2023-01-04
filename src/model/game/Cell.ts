@@ -18,6 +18,8 @@ export default class Cell {
   eastCell?: Cell;
   westCell?: Cell;
 
+  distanceToEnd?: number;
+
   constructor(position: Position, board: Board, walls?: string) {
     this.position = position;
     this.board = board;
@@ -28,6 +30,23 @@ export default class Cell {
       this.createWalls(directionWalls);
     }
   }
+
+  getConnectedNodes = () => {
+    const result: Cell[] = [];
+    if (!this.hasWallNorth && this.northCell) {
+      result.push(this.northCell);
+    }
+    if (!this.hasWallSouth && this.southCell) {
+      result.push(this.southCell);
+    }
+    if (!this.hasWallEast && this.eastCell) {
+      result.push(this.eastCell);
+    }
+    if (!this.hasWallWest && this.westCell) {
+      result.push(this.westCell);
+    }
+    return result;
+  };
 
   textalize = () => {
     const result: string[] = [];

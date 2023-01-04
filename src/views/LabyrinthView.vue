@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { reactive } from "vue";
 import GenerationPanel from "@/components/GenerationPanel.vue";
 import Neat from "@/model/neat/Neat";
 import Generation from "@/model/neat/Generation";
@@ -38,25 +38,21 @@ interface Output {
   STAY: number;
 }
 
-let data: Labyrinth = reactive({
-  generations: [],
-  generationNumber: 1,
-  bestScore: 0,
-  meanScore: 0,
-  worstScore: 0,
-  speciesCount: 1,
-});
-
 let NB_INPUTS: number = 9;
 let NB_OUTPUTS: number = 5;
 let NB_AGENTS: number = 20;
 
+let data: Labyrinth = reactive({
+  generations: [],
+  generationNumber: 0,
+  bestScore: 0,
+  meanScore: 0,
+  worstScore: 0,
+  speciesCount: 0,
+});
+
 const getGeneration = () => {
   return data.generations[data.generationNumber];
-};
-
-const changeGeneration = () => {
-  createGeneration(++data.generationNumber);
 };
 
 const calculateInput = (gameState: GameState) => {
@@ -177,7 +173,39 @@ const getPossibleActions = (gameState: GameState) => {
 };
 
 const calculateScore = (gameState: GameState) => {
-  return 0;
+  if (!gameState.player) {
+    throw new Error("Le joueur n'a pas été créé");
+  }
+  const player: Player = gameState.player;
+  if (!player.cell) {
+    throw new Error("Le joueur n'est pas dans le labyrinthe");
+  }
+  if (!player.cell.distanceToEnd) {
+    throw new Error("La distance à l'arrivée n'a pas été calculée");
+  }
+  const remainingActions: number = gameState.remainingActions;
+  const distanceToEnd: number = player.cell.distanceToEnd;
+  const score = 50 - distanceToEnd + remainingActions;
+  console.log("Score", score);
+  return score;
+};
+
+const calculateStats = () => {
+  const neat: Neat = getGeneration().neat;
+  neat.clients.sort(
+    (client1: Client, client2: Client) => client1.score - client2.score
+  );
+  console.log("Scores", neat.clients);
+  data.bestScore = neat.clients[neat.clients.length - 1].score;
+  if (neat.clients.length % 2 === 1) {
+    data.meanScore = neat.clients[Math.floor(neat.clients.length / 2)].score;
+  } else {
+    data.meanScore =
+      (neat.clients[Math.floor(neat.clients.length / 2) - 1].score +
+        neat.clients[Math.floor(neat.clients.length / 2)].score) /
+      2;
+  }
+  data.worstScore = neat.clients[0].score;
 };
 
 const playGame = (gameState: GameState) => {
@@ -185,11 +213,14 @@ const playGame = (gameState: GameState) => {
     throw new Error("Le joueur n'a pas été créé");
   }
   const player: Player = gameState.player;
-  const input: Input = calculateInput(gameState);
-  const output: Output = calculateOutput(gameState, input);
-  const possibleActions: ActionEnum[] = getPossibleActions(gameState);
-  const action: ActionEnum = getActionFromOutput(output, possibleActions);
-  executeAction(gameState, action);
+  while (!gameState.isFinished()) {
+    const input: Input = calculateInput(gameState);
+    const output: Output = calculateOutput(gameState, input);
+    const possibleActions: ActionEnum[] = getPossibleActions(gameState);
+    const action: ActionEnum = getActionFromOutput(output, possibleActions);
+    executeAction(gameState, action);
+    gameState.remainingActions--;
+  }
   const score = calculateScore(gameState);
 
   player.client.score = score;
@@ -210,15 +241,19 @@ const createGeneration = (number: number) => {
   const neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
   const generation: Generation = new Generation(neat);
   generation.number = number;
+  data.generationNumber = number;
+  data.speciesCount = neat.species.length;
   data.generations[data.generationNumber] = generation;
   neat.clients.forEach((client: Client) => {
     simulateClient(client, generation);
   });
+  calculateStats();
+  neat.evolve();
 };
 
-onMounted(() => {
+const launchSimulation = () => {
   createGeneration(1);
-});
+};
 </script>
 <template>
   <main>
@@ -230,7 +265,7 @@ onMounted(() => {
       :speciesCount="data.speciesCount"
     />
   </main>
-  <button @click="changeGeneration">Change génération</button>
+  <button @click="launchSimulation">Lancer la simulation</button>
 </template>
 
 <style scoped></style>

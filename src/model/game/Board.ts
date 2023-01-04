@@ -78,6 +78,28 @@ export default class Board {
     this.start?.addPlayer();
   };
 
+  calculateFinishDistance = () => {
+    if (this.end) {
+      const toCalculateNodes: Cell[] = [this.end];
+      this.end.distanceToEnd = 0;
+      while (toCalculateNodes.length) {
+        const node: Cell | undefined = toCalculateNodes.shift();
+        if (node) {
+          const connectedNodes: Cell[] = node.getConnectedNodes();
+          connectedNodes.forEach((connectedNode: Cell) => {
+            if (!connectedNode.distanceToEnd) {
+              if (node.distanceToEnd === undefined) {
+                throw Error("Plus possible de calculer la distance");
+              }
+              connectedNode.distanceToEnd = node.distanceToEnd + 1;
+              toCalculateNodes.push(connectedNode);
+            }
+          });
+        }
+      }
+    }
+  };
+
   textalize = () => {
     const result: string[] = [];
     for (let i: number = 0; i < this.height; i++) {
