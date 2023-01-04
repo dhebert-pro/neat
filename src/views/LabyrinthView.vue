@@ -16,6 +16,7 @@ interface Labyrinth {
   meanScore: number;
   worstScore: number;
   speciesCount: number;
+  enabled: boolean;
 }
 
 interface Input {
@@ -49,6 +50,7 @@ let data: Labyrinth = reactive({
   meanScore: 0,
   worstScore: 0,
   speciesCount: 0,
+  enabled: true,
 });
 
 const getGeneration = () => {
@@ -236,7 +238,9 @@ const simulateClient = (client: Client, generation: Generation) => {
 };
 
 const nextGeneration = () => {
-  createGeneration(data.generationNumber + 1);
+  if (data.enabled) {
+    createGeneration(data.generationNumber + 1);
+  }
 };
 
 const createGeneration = (number: number) => {
@@ -256,12 +260,17 @@ const createGeneration = (number: number) => {
   }, 500);
 };
 
+const stopSimulation = () => {
+  data.enabled = false;
+};
+
 const launchSimulation = () => {
+  data.enabled = true;
   nextGeneration();
 };
 </script>
 <template>
-  <main>
+  <main class="main">
     <GenerationPanel
       :number="getGeneration()?.number"
       :bestScore="data.bestScore"
@@ -271,6 +280,14 @@ const launchSimulation = () => {
     />
   </main>
   <button @click="launchSimulation">Lancer la simulation</button>
+  <button @click="stopSimulation">Stopper la simulation</button>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  margin: 20px;
+}
+button {
+  margin-left: 20px;
+}
+</style>
