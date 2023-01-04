@@ -186,7 +186,6 @@ const calculateScore = (gameState: GameState) => {
   const remainingActions: number = gameState.remainingActions;
   const distanceToEnd: number = player.cell.distanceToEnd;
   const score = 50 - distanceToEnd + remainingActions;
-  console.log("Score", score);
   return score;
 };
 
@@ -195,7 +194,6 @@ const calculateStats = () => {
   neat.clients.sort(
     (client1: Client, client2: Client) => client1.score - client2.score
   );
-  console.log("Scores", neat.clients);
   data.bestScore = neat.clients[neat.clients.length - 1].score;
   if (neat.clients.length % 2 === 1) {
     data.meanScore = neat.clients[Math.floor(neat.clients.length / 2)].score;
@@ -237,6 +235,10 @@ const simulateClient = (client: Client, generation: Generation) => {
   simulateGame(gameState);
 };
 
+const nextGeneration = () => {
+  createGeneration(data.generationNumber + 1);
+};
+
 const createGeneration = (number: number) => {
   const neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
   const generation: Generation = new Generation(neat);
@@ -249,10 +251,13 @@ const createGeneration = (number: number) => {
   });
   calculateStats();
   neat.evolve();
+  setTimeout(() => {
+    nextGeneration();
+  }, 500);
 };
 
 const launchSimulation = () => {
-  createGeneration(1);
+  nextGeneration();
 };
 </script>
 <template>
