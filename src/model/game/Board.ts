@@ -1,7 +1,7 @@
 import Cell from "./Cell";
 import Position from "./Position";
 import type Player from "./Player";
-import type { GenerationParams } from "../neat/Generation";
+import type Generation from "./base/Generation";
 
 export default class Board {
   static BOARD_WIDTH = 9;
@@ -68,13 +68,13 @@ export default class Board {
     return Math.floor((this.height - 1) / 2);
   };
 
-  placeTokens = (params: GenerationParams) => {
-    const startPositionX: number = params.BOARD_START_POSITION_X;
-    const startPositionY: number = params.BOARD_START_POSITION_Y;
-    const endPositionX: number = params.BOARD_END_POSITION_X;
-    const endPositionY: number = params.BOARD_END_POSITION_Y;
-    this.cells[startPositionY][startPositionX].addStart();
-    this.cells[endPositionY][endPositionX].addEnd();
+  placeTokens = (generation: Generation) => {
+    this.cells[generation.boardStartPositionY][
+      generation.boardStartPositionX
+    ].addStart();
+    this.cells[generation.boardEndPositionY][
+      generation.boardEndPositionX
+    ].addEnd();
   };
 
   placePlayer = () => {

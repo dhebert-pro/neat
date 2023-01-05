@@ -1,4 +1,4 @@
-import type Action from "@/model/neat/simulation/Action";
+import type Action from "@/model/neat/simulation/INeatAction";
 import type GameState from "../base/GameState";
 import ActionEnum from "../base/ActionEnum";
 

@@ -6,7 +6,7 @@ import ActionMove from "./action/ActionMove";
 import ActionMark from "./action/ActionMark";
 import ActionStay from "./action/ActionStay";
 import GameTokenEnum from "./GameTokenEnum";
-import type Action from "../neat/simulation/Action";
+import type Action from "../neat/simulation/INeatAction";
 import type ActionEnum from "./base/ActionEnum";
 
 export default class Player {

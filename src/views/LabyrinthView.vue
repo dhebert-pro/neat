@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import GenerationPanel from "@/components/GenerationPanel.vue";
 import Neat from "@/model/neat/Neat";
-import Generation from "@/model/neat/Generation";
+import Generation from "@/model/game/base/Generation";
 import type Client from "@/model/neat/Client";
 import GameState from "@/model/game/base/GameState";
 import Player from "@/model/game/Player";
@@ -10,9 +10,9 @@ import Board from "@/model/game/Board";
 import RandomUtil from "@/model/util/RandomUtil";
 import DirectionEnum from "@/model/game/DirectionEnum";
 import ActionEnum from "@/model/game/base/ActionEnum";
-import type Action from "@/model/neat/simulation/Action";
+import type Action from "@/model/neat/simulation/INeatAction";
 
-interface Labyrinth {
+interface ILabyrinth {
   generationNumber: number;
   generations: Generation[];
   bestScore: number;
@@ -23,7 +23,7 @@ interface Labyrinth {
   oneStep: boolean;
 }
 
-interface Input {
+interface IInput {
   wallNorth: number;
   wallSouth: number;
   wallEast: number;
@@ -44,7 +44,7 @@ interface Input {
   bias: number;
 }
 
-interface Output {
+interface IOutput {
   NORTH: number;
   SOUTH: number;
   EAST: number;
@@ -62,7 +62,7 @@ let NB_AGENTS: number = 20;
 
 let neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
 
-let data: Labyrinth = reactive({
+let data: ILabyrinth = reactive({
   generations: [],
   generationNumber: 0,
   bestScore: 0,
@@ -78,7 +78,7 @@ const calculateInput = (gameState: GameState) => {
     throw new Error("Le joueur n'a pas été créé");
   }
   const player: Player = gameState.player;
-  const input: Input = {
+  const input: IInput = {
     wallNorth: player.canGo(DirectionEnum.NORTH) ? 0 : 1,
     wallSouth: player.canGo(DirectionEnum.SOUTH) ? 0 : 1,
     wallEast: player.canGo(DirectionEnum.EAST) ? 0 : 1,
@@ -103,7 +103,7 @@ const calculateInput = (gameState: GameState) => {
   return input;
 };
 
-const calculateOutput = (gameState: GameState, input: Input) => {
+const calculateOutput = (gameState: GameState, input: IInput) => {
   if (!gameState.player) {
     throw new Error("Le joueur n'a pas été créé");
   }
@@ -128,7 +128,7 @@ const calculateOutput = (gameState: GameState, input: Input) => {
     input.distanceToEnd,
     input.bias,
   ]);
-  const output: Output = {
+  const output: IOutput = {
     [ActionEnum.NORTH]: result[0],
     [ActionEnum.SOUTH]: result[1],
     [ActionEnum.EAST]: result[2],
@@ -144,7 +144,7 @@ const calculateOutput = (gameState: GameState, input: Input) => {
 };
 
 const getActionFromOutput = (
-  output: Output,
+  output: IOutput,
   possibleActions: Action<GameState, ActionEnum>[]
 ) => {
   const possibleOutputValues: number[] = possibleActions.map(
@@ -186,7 +186,7 @@ const calculateScore = (gameState: GameState) => {
   const remainingActions: number = gameState.remainingActions;
   const distanceToEnd: number = player.getDistanceToEnd();
   let score =
-    gameState.generation.getMaxActions() - distanceToEnd + remainingActions;
+    gameState.generation.maxActions - distanceToEnd + remainingActions;
   if (distanceToEnd === 0) {
     score += 1000;
   }
@@ -215,8 +215,8 @@ const playGame = (gameState: GameState) => {
   }
   const player: Player = gameState.player;
   while (!gameState.isFinished()) {
-    const input: Input = calculateInput(gameState);
-    const output: Output = calculateOutput(gameState, input);
+    const input: IInput = calculateInput(gameState);
+    const output: IOutput = calculateOutput(gameState, input);
     const possibleActions: Action<GameState, ActionEnum>[] =
       getPossibleActions(gameState);
     const action: Action<GameState, ActionEnum> = getActionFromOutput(
