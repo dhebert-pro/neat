@@ -73,10 +73,6 @@ let data: Labyrinth = reactive({
   oneStep: false,
 });
 
-const getGeneration = () => {
-  return data.generations[data.generationNumber];
-};
-
 const calculateInput = (gameState: GameState) => {
   if (!gameState.player) {
     throw new Error("Le joueur n'a pas été créé");
@@ -184,15 +180,15 @@ const calculateScore = (gameState: GameState) => {
   }
   const remainingActions: number = gameState.remainingActions;
   const distanceToEnd: number = player.getDistanceToEnd();
-  let score = gameState.maxActions - distanceToEnd + remainingActions;
+  let score =
+    gameState.generation.params.MAX_ACTIONS - distanceToEnd + remainingActions;
   if (distanceToEnd === 0) {
     score += 1000;
   }
   return score;
 };
 
-const calculateStats = () => {
-  const neat: Neat = getGeneration().neat;
+const calculateStats = (neat: Neat) => {
   neat.clients.sort(
     (client1: Client, client2: Client) => client1.score - client2.score
   );
@@ -232,7 +228,7 @@ const simulateGame = (gameState: GameState) => {
 
 const simulateClient = (client: Client, generation: Generation) => {
   const player = new Player(client);
-  const gameState: GameState = new GameState(player, generation.params);
+  const gameState: GameState = new GameState(player, generation);
   generation.gameStates.push(gameState);
   simulateGame(gameState);
 };
@@ -254,7 +250,7 @@ const createGeneration = (number: number) => {
   neat.clients.forEach((client: Client) => {
     simulateClient(client, generation);
   });
-  calculateStats();
+  calculateStats(neat);
   neat.evolve();
   data.speciesCount = neat.species.length;
   if (!data.oneStep) {
