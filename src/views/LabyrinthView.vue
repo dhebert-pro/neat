@@ -6,6 +6,7 @@ import Generation from "@/model/neat/Generation";
 import type Client from "@/model/neat/Client";
 import GameState from "@/model/game/GameState";
 import Player from "@/model/game/Player";
+import Board from "@/model/game/Board";
 import type Action from "@/model/game/action/Action";
 import { ActionEnum } from "@/model/game/action/Action";
 import RandomUtil from "@/model/util/RandomUtil";
@@ -35,6 +36,11 @@ interface Input {
   markerSouth: number;
   markerEast: number;
   markerWest: number;
+  fromNorth: number;
+  fromSouth: number;
+  fromEast: number;
+  fromWest: number;
+  distanceToEnd: number;
   bias: number;
 }
 
@@ -50,7 +56,7 @@ interface Output {
   MARK_WEST: number;
 }
 
-let NB_INPUTS: number = 13;
+let NB_INPUTS: number = 18;
 let NB_OUTPUTS: number = 9;
 let NB_AGENTS: number = 20;
 
@@ -89,6 +95,13 @@ const calculateInput = (gameState: GameState) => {
     markerSouth: player.hasMarker(DirectionEnum.SOUTH) ? 1 : 0,
     markerEast: player.hasMarker(DirectionEnum.EAST) ? 1 : 0,
     markerWest: player.hasMarker(DirectionEnum.WEST) ? 1 : 0,
+    fromNorth: player.from(DirectionEnum.NORTH) ? 1 : 0,
+    fromSouth: player.from(DirectionEnum.SOUTH) ? 1 : 0,
+    fromEast: player.from(DirectionEnum.EAST) ? 1 : 0,
+    fromWest: player.from(DirectionEnum.WEST) ? 1 : 0,
+    distanceToEnd:
+      player.getDistanceToEnd() /
+      ((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) / 2),
     bias: 1,
   };
   return input;
@@ -112,6 +125,11 @@ const calculateOutput = (gameState: GameState, input: Input) => {
     input.markerSouth,
     input.markerEast,
     input.markerWest,
+    input.fromNorth,
+    input.fromSouth,
+    input.fromEast,
+    input.fromWest,
+    input.distanceToEnd,
     input.bias,
   ]);
   const output: Output = {
@@ -161,12 +179,15 @@ const calculateScore = (gameState: GameState) => {
   if (!player.cell) {
     throw new Error("Le joueur n'est pas dans le labyrinthe");
   }
-  if (!player.cell.distanceToEnd) {
+  if (player.cell.distanceToEnd === undefined) {
     throw new Error("La distance à l'arrivée n'a pas été calculée");
   }
   const remainingActions: number = gameState.remainingActions;
-  const distanceToEnd: number = player.cell.distanceToEnd;
-  const score = 50 - distanceToEnd + remainingActions;
+  const distanceToEnd: number = player.getDistanceToEnd();
+  let score = GameState.MAX_ACTIONS - distanceToEnd + remainingActions;
+  if (distanceToEnd === 0) {
+    score += 1000;
+  }
   return score;
 };
 
@@ -226,7 +247,6 @@ const createGeneration = (number: number) => {
   const generation: Generation = new Generation(neat);
   generation.number = number;
   data.generationNumber = number;
-  data.speciesCount = neat.species.length;
   if (data.generationNumber > 100) {
     data.generations.shift();
   }
@@ -235,8 +255,9 @@ const createGeneration = (number: number) => {
     simulateClient(client, generation);
   });
   calculateStats();
+  neat.evolve();
+  data.speciesCount = neat.species.length;
   if (!data.oneStep) {
-    neat.evolve();
     setTimeout(() => {
       nextGeneration();
     }, 10);
@@ -255,6 +276,7 @@ const resetSimulation = () => {
   data.meanScore = 0;
   data.worstScore = 0;
   data.speciesCount = 0;
+  neat = new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
 };
 
 const launchSimulation = () => {

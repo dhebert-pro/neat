@@ -11,6 +11,7 @@ import GameTokenEnum from "./GameTokenEnum";
 export default class Player {
   cell?: Cell;
   client: Client;
+  fromDirection?: DirectionEnum;
 
   constructor(client: Client) {
     this.client = client;
@@ -26,6 +27,10 @@ export default class Player {
     this.canGo(direction) &&
     this.cell?.getCell(direction)?.hasToken(GameTokenEnum.MARKER);
 
+  from = (direction: DirectionEnum) => {
+    return this.fromDirection === direction;
+  };
+
   go = (direction: DirectionEnum) => {
     if (!this.canGo(direction)) {
       throw new Error(`Player can't go ${direction}`);
@@ -36,6 +41,21 @@ export default class Player {
     const destinationCell: Cell | undefined = this.cell.getCell(direction);
     if (!destinationCell) {
       throw new Error("Destination cell not exists");
+    }
+    switch (direction) {
+      case DirectionEnum.NORTH:
+        this.fromDirection = DirectionEnum.SOUTH;
+        break;
+      case DirectionEnum.SOUTH:
+        this.fromDirection = DirectionEnum.NORTH;
+        break;
+      case DirectionEnum.EAST:
+        this.fromDirection = DirectionEnum.WEST;
+        break;
+      case DirectionEnum.WEST:
+        this.fromDirection = DirectionEnum.EAST;
+        break;
+      default:
     }
     this.cell.removePlayer();
     destinationCell.addPlayer();
@@ -52,7 +72,17 @@ export default class Player {
     if (!destinationCell) {
       throw new Error("Destination cell not exists");
     }
-    this.cell.addMarker();
+    destinationCell.addMarker();
+  };
+
+  getDistanceToEnd = () => {
+    if (!this.cell) {
+      throw new Error("Player is not on the maze");
+    }
+    if (this.cell.distanceToEnd === undefined) {
+      throw Error("Distance à l'arrivée non calculée");
+    }
+    return this.cell.distanceToEnd;
   };
 
   getPossibleActions = (gameState: GameState) => {

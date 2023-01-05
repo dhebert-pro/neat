@@ -4,6 +4,9 @@ import type Player from "./Player";
 import type { GenerationParams } from "../neat/Generation";
 
 export default class Board {
+  static BOARD_WIDTH = 9;
+  static BOARD_HEIGHT = 9;
+
   cells: Cell[][] = [];
   width: number = 0;
   height: number = 0;
@@ -87,7 +90,7 @@ export default class Board {
         if (node) {
           const connectedNodes: Cell[] = node.getConnectedNodes();
           connectedNodes.forEach((connectedNode: Cell) => {
-            if (!connectedNode.distanceToEnd) {
+            if (connectedNode.distanceToEnd === undefined) {
               if (node.distanceToEnd === undefined) {
                 throw Error("Plus possible de calculer la distance");
               }

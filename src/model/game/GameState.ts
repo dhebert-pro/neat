@@ -3,9 +3,11 @@ import Board from "./Board";
 import type Player from "./Player";
 
 export default class GameState {
+  static MAX_ACTIONS: number = Board.BOARD_WIDTH * Board.BOARD_HEIGHT;
+
   player?: Player;
   board: Board;
-  remainingActions: number = 50;
+  remainingActions: number = GameState.MAX_ACTIONS;
 
   constructor(player: Player, params: GenerationParams) {
     this.board = new Board(params.BOARD_PATTERN);
