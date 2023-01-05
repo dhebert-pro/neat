@@ -4,12 +4,12 @@ import GenerationPanel from "@/components/GenerationPanel.vue";
 import Neat from "@/model/neat/Neat";
 import Generation from "@/model/neat/Generation";
 import type Client from "@/model/neat/Client";
-import GameState from "@/model/game/GameState";
+import GameState from "@/model/game/base/GameState";
 import Player from "@/model/game/Player";
 import Board from "@/model/game/Board";
 import RandomUtil from "@/model/util/RandomUtil";
 import DirectionEnum from "@/model/game/DirectionEnum";
-import ActionEnum from "@/model/game/action/ActionEnum";
+import ActionEnum from "@/model/game/base/ActionEnum";
 import type Action from "@/model/neat/simulation/Action";
 
 interface Labyrinth {

@@ -1,5 +1,5 @@
 import Board from "../game/Board";
-import type GameState from "../game/GameState";
+import type GameState from "../game/base/GameState";
 import RandomUtil from "../util/RandomUtil";
 import type Neat from "./Neat";
 

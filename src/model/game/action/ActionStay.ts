@@ -1,6 +1,6 @@
 import type Action from "@/model/neat/simulation/Action";
-import type GameState from "../GameState";
-import ActionEnum from "./ActionEnum";
+import type GameState from "../base/GameState";
+import ActionEnum from "../base/ActionEnum";
 
 export default class ActionStay implements Action<GameState, ActionEnum> {
   isPossible = (_: GameState) => {

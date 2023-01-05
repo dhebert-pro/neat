@@ -1,8 +1,8 @@
 import type Action from "@/model/neat/simulation/Action";
 import DirectionEnum from "../DirectionEnum";
-import type GameState from "../GameState";
+import type GameState from "../base/GameState";
 import type Player from "../Player";
-import ActionEnum from "./ActionEnum";
+import ActionEnum from "../base/ActionEnum";
 
 export default class ActionMove implements Action<GameState, ActionEnum> {
   direction: DirectionEnum;

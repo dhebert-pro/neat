@@ -1,5 +1,5 @@
 import type Client from "../neat/Client";
-import type GameState from "./GameState";
+import type GameState from "./base/GameState";
 import type Cell from "./Cell";
 import DirectionEnum from "./DirectionEnum";
 import ActionMove from "./action/ActionMove";
@@ -7,7 +7,7 @@ import ActionMark from "./action/ActionMark";
 import ActionStay from "./action/ActionStay";
 import GameTokenEnum from "./GameTokenEnum";
 import type Action from "../neat/simulation/Action";
-import type ActionEnum from "./action/ActionEnum";
+import type ActionEnum from "./base/ActionEnum";
 
 export default class Player {
   cell?: Cell;
