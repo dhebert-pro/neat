@@ -7,6 +7,7 @@ import ActionMark from "./action/ActionMark";
 import ActionStay from "./action/ActionStay";
 import GameTokenEnum from "./GameTokenEnum";
 import type Action from "../neat/simulation/Action";
+import type ActionEnum from "./action/ActionEnum";
 
 export default class Player {
   cell?: Cell;
@@ -96,7 +97,7 @@ export default class Player {
     const markEastAction: ActionMark = new ActionMark(DirectionEnum.EAST);
     const markWestAction: ActionMark = new ActionMark(DirectionEnum.WEST);
 
-    const possibleActions: Action[] = [
+    const possibleActions: Action<GameState, ActionEnum>[] = [
       goNorthAction,
       goSouthAction,
       goEastAction,
@@ -106,7 +107,9 @@ export default class Player {
       markSouthAction,
       markEastAction,
       markWestAction,
-    ].filter((action: Action) => action.isPossible(gameState));
+    ].filter((action: Action<GameState, ActionEnum>) =>
+      action.isPossible(gameState)
+    );
     return possibleActions;
   };
 }

@@ -143,18 +143,23 @@ const calculateOutput = (gameState: GameState, input: Input) => {
   return output;
 };
 
-const getActionFromOutput = (output: Output, possibleActions: Action[]) => {
+const getActionFromOutput = (
+  output: Output,
+  possibleActions: Action<GameState, ActionEnum>[]
+) => {
   const possibleOutputValues: number[] = possibleActions.map(
-    (possibleAction: Action) => output[possibleAction.getType()]
+    (possibleAction: Action<GameState, ActionEnum>) =>
+      output[possibleAction.getType()]
   );
   const betterActionValue = Math.max(...possibleOutputValues);
-  const betterActions: Action[] = [];
-  possibleActions.forEach((possibleAction: Action) => {
+  const betterActions: Action<GameState, ActionEnum>[] = [];
+  possibleActions.forEach((possibleAction: Action<GameState, ActionEnum>) => {
     if (betterActionValue === output[possibleAction.getType()]) {
       betterActions.push(possibleAction);
     }
   });
-  const action: Action = RandomUtil.getElement(betterActions);
+  const action: Action<GameState, ActionEnum> =
+    RandomUtil.getElement(betterActions);
 
   return action;
 };
@@ -212,8 +217,12 @@ const playGame = (gameState: GameState) => {
   while (!gameState.isFinished()) {
     const input: Input = calculateInput(gameState);
     const output: Output = calculateOutput(gameState, input);
-    const possibleActions: Action[] = getPossibleActions(gameState);
-    const action: Action = getActionFromOutput(output, possibleActions);
+    const possibleActions: Action<GameState, ActionEnum>[] =
+      getPossibleActions(gameState);
+    const action: Action<GameState, ActionEnum> = getActionFromOutput(
+      output,
+      possibleActions
+    );
     action.execute(gameState);
     gameState.remainingActions--;
   }

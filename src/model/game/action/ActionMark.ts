@@ -4,7 +4,7 @@ import type GameState from "../GameState";
 import type Player from "../Player";
 import ActionEnum from "./ActionEnum";
 
-export default class ActionMark implements Action {
+export default class ActionMark implements Action<GameState, ActionEnum> {
   direction: DirectionEnum;
 
   constructor(direction: DirectionEnum) {
