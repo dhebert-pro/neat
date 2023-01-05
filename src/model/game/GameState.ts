@@ -3,11 +3,10 @@ import Board from "./Board";
 import type Player from "./Player";
 
 export default class GameState {
-  static MAX_ACTIONS: number = Board.BOARD_WIDTH * Board.BOARD_HEIGHT;
-
   player?: Player;
   board: Board;
-  remainingActions: number = GameState.MAX_ACTIONS;
+  remainingActions: number = Number.MAX_SAFE_INTEGER;
+  maxActions: number = Number.MAX_SAFE_INTEGER;
 
   constructor(player: Player, params: GenerationParams) {
     this.board = new Board(params.BOARD_PATTERN);
@@ -16,6 +15,8 @@ export default class GameState {
     this.player = player;
     this.board.player = player;
     this.board.placePlayer();
+    this.remainingActions = params.MAX_ACTIONS;
+    this.maxActions = params.MAX_ACTIONS;
   }
 
   isFinished = () => {
