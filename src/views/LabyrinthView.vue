@@ -7,10 +7,10 @@ import type Client from "@/model/neat/Client";
 import GameState from "@/model/game/GameState";
 import Player from "@/model/game/Player";
 import Board from "@/model/game/Board";
-import type Action from "@/model/game/action/Action";
-import { ActionEnum } from "@/model/game/action/Action";
 import RandomUtil from "@/model/util/RandomUtil";
 import DirectionEnum from "@/model/game/DirectionEnum";
+import ActionEnum from "@/model/game/action/ActionEnum";
+import type Action from "@/model/neat/simulation/Action";
 
 interface Labyrinth {
   generationNumber: number;
