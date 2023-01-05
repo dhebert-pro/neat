@@ -186,7 +186,7 @@ const calculateScore = (gameState: GameState) => {
   const remainingActions: number = gameState.remainingActions;
   const distanceToEnd: number = player.getDistanceToEnd();
   let score =
-    gameState.generation.params.MAX_ACTIONS - distanceToEnd + remainingActions;
+    gameState.generation.getMaxActions() - distanceToEnd + remainingActions;
   if (distanceToEnd === 0) {
     score += 1000;
   }

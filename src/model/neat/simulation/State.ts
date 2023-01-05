@@ -1,5 +1,4 @@
 import type Generation from "@/model/neat/Generation";
-import type { GenerationParams } from "@/model/neat/Generation";
 
 export default class State<Player> {
   player?: Player;
@@ -9,8 +8,7 @@ export default class State<Player> {
   constructor(player: Player, generation: Generation) {
     this.generation = generation;
     this.player = player;
-    const params: GenerationParams = generation.params;
-    this.remainingActions = params.MAX_ACTIONS;
+    this.remainingActions = generation.getMaxActions();
   }
 
   hasRemainingMoves = () => this.remainingActions > 0;

@@ -9,7 +9,6 @@ export interface GenerationParams {
   BOARD_START_POSITION_Y: number;
   BOARD_END_POSITION_X: number;
   BOARD_END_POSITION_Y: number;
-  MAX_ACTIONS: number;
 }
 
 export default class Generation {
@@ -41,7 +40,8 @@ export default class Generation {
       BOARD_START_POSITION_Y: RandomUtil.getInt(0, middleHeight),
       BOARD_END_POSITION_X: RandomUtil.getInt(middleWidth + 1, width - 1),
       BOARD_END_POSITION_Y: RandomUtil.getInt(middleHeight + 1, height - 1),
-      MAX_ACTIONS: Board.BOARD_WIDTH * Board.BOARD_HEIGHT,
     };
   }
+
+  getMaxActions = () => Board.BOARD_WIDTH * Board.BOARD_HEIGHT;
 }
