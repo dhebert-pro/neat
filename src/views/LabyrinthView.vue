@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { reactive } from "vue";
+import GameNeat from "@/model/game/neat/GameNeat";
 import Generation from "@/model/game/neat/Generation";
 import GenerationPanel from "@/components/GenerationPanel.vue";
-import newNeat from "@/model/game/neat/GameNeat";
 import simulateClient from "@/model/game/simulation/Simulation";
 import type Client from "@/model/neat/Client";
 import type INeatGenerationIndicateurs from "@/model/neat/simulation/INeatGenerationIndicateurs";
 import type Neat from "@/model/neat/Neat";
-import type Player from "@/model/game/Player";
+import type Player from "@/model/game/simulation/Player";
 import type Score from "@/model/neat/Score";
 
 const MAX_STORED_GENERATIONS = 100;
 const GENERATION_DELAY = 10;
 
-let neat: Neat = newNeat();
+let neat: Neat = GameNeat.new();
 
 let data: INeatGenerationIndicateurs<Player> = reactive({
   generations: [],
@@ -73,7 +73,7 @@ const resetSimulation = () => {
   data.meanScore = 0;
   data.worstScore = 0;
   data.speciesCount = 0;
-  neat = newNeat();
+  neat = GameNeat.new();
 };
 
 const launchSimulation = () => {

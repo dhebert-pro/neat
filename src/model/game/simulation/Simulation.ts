@@ -1,9 +1,9 @@
+import Action from "@/model/game/action/Action";
 import GameState from "@/model/game/simulation/GameState";
-import Player from "@/model/game/Player";
-import calculateInput from "@/model/game/neat/Input";
-import calculateOutput from "@/model/game/neat/Output";
+import Input from "@/model/game/neat/Input";
+import Output from "@/model/game/neat/Output";
+import Player from "@/model/game/simulation/Player";
 import getActionFromOutput from "@/model/neat/simulation/NeatOutput";
-import getPossibleActions from "@/model/game/action/Action";
 import type ActionEnum from "@/model/game/action/ActionEnum";
 import type Client from "@/model/neat/Client";
 import type Generation from "@/model/game/neat/Generation";
@@ -38,10 +38,10 @@ const playGame = (gameState: GameState) => {
   }
   const player: Player = gameState.player;
   while (!gameState.isFinished()) {
-    const input: IInput = calculateInput(gameState);
-    const output: IOutput = calculateOutput(gameState, input);
+    const input: IInput = Input.calculateInput(gameState);
+    const output: IOutput = Output.calculateOutput(gameState, input);
     const possibleActions: INeatAction<GameState, ActionEnum>[] =
-      getPossibleActions(gameState);
+      Action.getPossibleActions(gameState);
     const action: INeatAction<GameState, ActionEnum> = getActionFromOutput<
       GameState,
       IOutput,

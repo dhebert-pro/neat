@@ -1,9 +1,15 @@
 import Neat from "@/model/neat/Neat";
 
-const NB_INPUTS: number = 18;
-const NB_OUTPUTS: number = 9;
-const NB_AGENTS: number = 20;
+export default class GameNeat {
+  static NB_INPUTS: number = 18;
+  static NB_OUTPUTS: number = 9;
+  static NB_AGENTS: number = 20;
 
-const newNeat = () => new Neat(NB_INPUTS, NB_OUTPUTS, NB_AGENTS);
-
-export default newNeat;
+  static new = () => {
+    return new Neat(
+      GameNeat.NB_INPUTS,
+      GameNeat.NB_OUTPUTS,
+      GameNeat.NB_AGENTS
+    );
+  };
+}
