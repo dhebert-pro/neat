@@ -15,6 +15,7 @@ import type Neat from "@/model/neat/Neat";
 import calculateInput from "@/model/game/base/Input";
 import calculateOutput from "@/model/game/base/Output";
 import getActionFromOutput from "@/model/neat/simulation/NeatOutput";
+import getPossibleActions from "@/model/game/action/Action";
 
 let neat: Neat = newNeat();
 
@@ -28,14 +29,6 @@ let data: INeatGenerationIndicateurs<Player> = reactive({
   enabled: false,
   oneStep: false,
 });
-
-const getPossibleActions = (gameState: GameState) => {
-  if (!gameState.player) {
-    throw new Error("Le joueur n'a pas été créé");
-  }
-  const player: Player = gameState.player;
-  return player.getPossibleActions(gameState);
-};
 
 const calculateScore = (gameState: GameState) => {
   if (!gameState.player) {

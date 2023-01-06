@@ -1,13 +1,7 @@
 import type Client from "../neat/Client";
-import type GameState from "./base/GameState";
 import type Cell from "./Cell";
 import DirectionEnum from "../general/DirectionEnum";
-import ActionMove from "./action/ActionMove";
-import ActionMark from "./action/ActionMark";
-import ActionStay from "./action/ActionStay";
 import GameTokenEnum from "./GameTokenEnum";
-import type ActionEnum from "./base/ActionEnum";
-import type INeatAction from "../neat/simulation/INeatAction";
 
 export default class Player {
   cell?: Cell;
@@ -84,32 +78,5 @@ export default class Player {
       throw Error("Distance à l'arrivée non calculée");
     }
     return this.cell.distanceToEnd;
-  };
-
-  getPossibleActions = (gameState: GameState) => {
-    const goNorthAction: ActionMove = new ActionMove(DirectionEnum.NORTH);
-    const goSouthAction: ActionMove = new ActionMove(DirectionEnum.SOUTH);
-    const goEastAction: ActionMove = new ActionMove(DirectionEnum.EAST);
-    const goWestAction: ActionMove = new ActionMove(DirectionEnum.WEST);
-    const stayAction: ActionStay = new ActionStay();
-    const markNorthAction: ActionMark = new ActionMark(DirectionEnum.NORTH);
-    const markSouthAction: ActionMark = new ActionMark(DirectionEnum.SOUTH);
-    const markEastAction: ActionMark = new ActionMark(DirectionEnum.EAST);
-    const markWestAction: ActionMark = new ActionMark(DirectionEnum.WEST);
-
-    const possibleActions: INeatAction<GameState, ActionEnum>[] = [
-      goNorthAction,
-      goSouthAction,
-      goEastAction,
-      goWestAction,
-      stayAction,
-      markNorthAction,
-      markSouthAction,
-      markEastAction,
-      markWestAction,
-    ].filter((action: INeatAction<GameState, ActionEnum>) =>
-      action.isPossible(gameState)
-    );
-    return possibleActions;
   };
 }
