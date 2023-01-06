@@ -1,5 +1,5 @@
 import Cell from "./Cell";
-import Position from "./Position";
+import Position from "../general/Position";
 import type Player from "./Player";
 import type Generation from "./base/Generation";
 

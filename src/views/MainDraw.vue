@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Application, Assets, Sprite, type ICanvas, Ticker } from "pixi.js";
 import { ref, onMounted } from "vue";
-import Position from "@/model/game/Position";
+import Position from "@/model/general/Positionion";
 import Agent from "@/model/neat/Agent";
 import Neat from "@/model/neat/Neat";
 import type Client from "@/model/neat/Client";

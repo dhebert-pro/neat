@@ -1,5 +1,5 @@
 import type Action from "@/model/neat/simulation/INeatAction";
-import DirectionEnum from "../DirectionEnum";
+import DirectionEnum from "../../general/DirectionEnum";
 import type GameState from "../base/GameState";
 import type Player from "../Player";
 import ActionEnum from "../base/ActionEnum";

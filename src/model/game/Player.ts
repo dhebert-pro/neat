@@ -1,7 +1,7 @@
 import type Client from "../neat/Client";
 import type GameState from "./base/GameState";
 import type Cell from "./Cell";
-import DirectionEnum from "./DirectionEnum";
+import DirectionEnum from "../general/DirectionEnum";
 import ActionMove from "./action/ActionMove";
 import ActionMark from "./action/ActionMark";
 import ActionStay from "./action/ActionStay";

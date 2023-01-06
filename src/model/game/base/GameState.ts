@@ -1,10 +1,13 @@
 import type Generation from "./Generation";
 import Board from "../Board";
 import type Player from "../Player";
-import State from "@/model/neat/simulation/NeatGameState";
-import type IState from "@/model/neat/simulation/INeatState";
+import NeatGameState from "@/model/neat/simulation/NeatGameState";
+import type INeatState from "@/model/neat/simulation/INeatState";
 
-export default class GameState extends State<Player> implements IState {
+export default class GameState
+  extends NeatGameState<Player>
+  implements INeatState
+{
   board: Board;
 
   constructor(player: Player, generation: Generation) {
