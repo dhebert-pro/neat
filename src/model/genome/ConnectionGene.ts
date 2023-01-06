@@ -1,5 +1,5 @@
-import Gene from "./Gene";
-import type NodeGene from "./NodeGene";
+import Gene from "@/model/genome/Gene";
+import type NodeGene from "@/model/genome/NodeGene";
 
 export default class ConnectionGene extends Gene {
   from: NodeGene;

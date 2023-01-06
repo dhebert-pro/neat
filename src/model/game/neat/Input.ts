@@ -1,8 +1,8 @@
+import Board from "@/model/game/Board";
+import type IInput from "@/model/game/neat/IInput";
+import type Player from "@/model/game/Player";
 import DirectionEnum from "@/model/general/DirectionEnum";
 import type NeatGameState from "@/model/neat/simulation/NeatGameState";
-import Board from "../Board";
-import type Player from "../Player";
-import type IInput from "./IInput";
 
 const calculateInput = (gameState: NeatGameState<Player>) => {
   if (!gameState.player) {

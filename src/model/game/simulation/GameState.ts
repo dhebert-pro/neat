@@ -1,8 +1,8 @@
-import type Generation from "../neat/Generation";
-import Board from "../Board";
-import type Player from "../Player";
 import NeatGameState from "@/model/neat/simulation/NeatGameState";
 import type INeatState from "@/model/neat/simulation/INeatState";
+import type Player from "@/model/game/Player";
+import Board from "@/model/game/Board";
+import type Generation from "@/model/game/neat/Generation";
 
 export default class GameState
   extends NeatGameState<Player>

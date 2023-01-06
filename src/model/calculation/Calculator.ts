@@ -1,8 +1,8 @@
-import type ConnectionGene from "../genome/ConnectionGene";
-import type Genome from "../genome/Genome";
-import type NodeGene from "../genome/NodeGene";
-import Node from "./Node";
-import Connection from "./Connection";
+import Connection from "@/model/calculation/Connection";
+import Node from "@/model/calculation/Node";
+import type ConnectionGene from "@/model/genome/ConnectionGene";
+import type Genome from "@/model/genome/Genome";
+import type NodeGene from "@/model/genome/NodeGene";
 
 export default class Calculator {
   inputNodes: Node[] = [];

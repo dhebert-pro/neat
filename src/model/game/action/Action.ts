@@ -1,10 +1,10 @@
+import type ActionEnum from "@/model/game/action/ActionEnum";
+import ActionMark from "@/model/game/action/ActionMark";
+import ActionMove from "@/model/game/action/ActionMove";
+import ActionStay from "@/model/game/action/ActionStay";
+import type GameState from "@/model/game/simulation/GameState";
 import DirectionEnum from "@/model/general/DirectionEnum";
 import type INeatAction from "@/model/neat/simulation/INeatAction";
-import type GameState from "../simulation/GameState";
-import type ActionEnum from "./ActionEnum";
-import ActionMark from "./ActionMark";
-import ActionMove from "./ActionMove";
-import ActionStay from "./ActionStay";
 
 const getPossibleActions = (gameState: GameState) => {
   const goNorthAction: ActionMove = new ActionMove(DirectionEnum.NORTH);

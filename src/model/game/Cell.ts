@@ -1,8 +1,8 @@
-import ArrayUtil from "../util/ArrayUtil";
-import type Board from "./Board";
-import DirectionEnum from "../general/DirectionEnum";
-import GameTokenEnum from "./GameTokenEnum";
-import type Position from "../general/Position";
+import type Board from "@/model/game/Board";
+import GameTokenEnum from "@/model/game/GameTokenEnum";
+import DirectionEnum from "@/model/general/DirectionEnum";
+import type Position from "@/model/general/Position";
+import ArrayUtil from "@/model/util/ArrayUtil";
 
 export default class Cell {
   position: Position;

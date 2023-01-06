@@ -1,4 +1,4 @@
-import ArrayUtil from "./ArrayUtil";
+import ArrayUtil from "@/model/util/ArrayUtil";
 
 export default class RandomUtil {
   static getInt = (start: number, end: number) => {

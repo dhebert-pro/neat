@@ -1,6 +1,7 @@
-import Calculator from "../calculation/Calculator";
-import type Genome from "../genome/Genome";
-import type Species from "./Species";
+import Calculator from "@/model/calculation/Calculator";
+import type Genome from "@/model/genome/Genome";
+import type Species from "@/model/neat/Species";
+
 export default class Client {
   genome: Genome | undefined;
   score: number = 0;

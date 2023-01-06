@@ -1,4 +1,4 @@
-import type Connection from "./Connection";
+import type Connection from "@/model/calculation/Connection";
 
 export default class Node {
   x: number;

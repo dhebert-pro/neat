@@ -1,5 +1,5 @@
-import Genome from "../genome/Genome";
-import type Client from "./Client";
+import Genome from "@/model/genome/Genome";
+import type Client from "@/model/neat/Client";
 
 export default class Species {
   clients: Client[] = [];

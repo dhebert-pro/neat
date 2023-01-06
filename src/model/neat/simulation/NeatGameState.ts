@@ -1,4 +1,4 @@
-import type NeatGeneration from "./NeatGeneration";
+import type NeatGeneration from "@/model/neat/simulation/NeatGeneration";
 
 export default class NeatGameState<Player> {
   player?: Player;

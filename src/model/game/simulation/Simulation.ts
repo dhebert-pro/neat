@@ -1,15 +1,15 @@
+import getPossibleActions from "@/model/game/action/Action";
+import type ActionEnum from "@/model/game/action/ActionEnum";
+import type Generation from "@/model/game/neat/Generation";
+import type IInput from "@/model/game/neat/IInput";
+import calculateInput from "@/model/game/neat/Input";
+import type IOutput from "@/model/game/neat/IOutput";
+import calculateOutput from "@/model/game/neat/Output";
+import Player from "@/model/game/Player";
+import GameState from "@/model/game/simulation/GameState";
 import type Client from "@/model/neat/Client";
 import type INeatAction from "@/model/neat/simulation/INeatAction";
 import getActionFromOutput from "@/model/neat/simulation/NeatOutput";
-import getPossibleActions from "../action/Action";
-import Player from "../Player";
-import type ActionEnum from "../action/ActionEnum";
-import GameState from "./GameState";
-import type Generation from "../neat/Generation";
-import type IInput from "../neat/IInput";
-import calculateInput from "../neat/Input";
-import type IOutput from "../neat/IOutput";
-import calculateOutput from "../neat/Output";
 
 const calculateScore = (gameState: GameState) => {
   if (!gameState.player) {
