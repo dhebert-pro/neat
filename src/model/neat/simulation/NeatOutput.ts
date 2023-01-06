@@ -1,5 +1,5 @@
-import type INeatAction from "@/model/neat/simulation/INeatAction";
 import RandomUtil from "@/model/util/RandomUtil";
+import type INeatAction from "@/model/neat/simulation/INeatAction";
 
 const getActionFromOutput = <
   GameState,

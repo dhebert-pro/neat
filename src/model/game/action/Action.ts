@@ -1,9 +1,9 @@
-import type ActionEnum from "@/model/game/action/ActionEnum";
 import ActionMark from "@/model/game/action/ActionMark";
 import ActionMove from "@/model/game/action/ActionMove";
 import ActionStay from "@/model/game/action/ActionStay";
-import type GameState from "@/model/game/simulation/GameState";
 import DirectionEnum from "@/model/general/DirectionEnum";
+import type ActionEnum from "@/model/game/action/ActionEnum";
+import type GameState from "@/model/game/simulation/GameState";
 import type INeatAction from "@/model/neat/simulation/INeatAction";
 
 const getPossibleActions = (gameState: GameState) => {

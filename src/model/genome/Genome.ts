@@ -1,7 +1,7 @@
 import ConnectionGene from "@/model/genome/ConnectionGene";
 import Gene from "@/model/genome/Gene";
-import type NodeGene from "@/model/genome/NodeGene";
 import Neat from "@/model/neat/Neat";
+import type NodeGene from "@/model/genome/NodeGene";
 
 export default class Genome {
   connections: ConnectionGene[] = [];

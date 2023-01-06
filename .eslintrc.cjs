@@ -11,11 +11,10 @@ module.exports = {
     "@vue/eslint-config-typescript",
     "@vue/eslint-config-prettier",
   ],
-
+  plugins: ["sort-imports-es6-autofix"],
   parserOptions: {
     ecmaVersion: "latest",
   },
-
   rules: {
     semi: "off",
     "@typescript-eslint/semi": "error",
@@ -25,6 +24,14 @@ module.exports = {
       "error",
       {
         patterns: [".*"],
+      },
+    ],
+    "sort-imports-es6-autofix/sort-imports-es6": [
+      2,
+      {
+        ignoreCase: false,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
       },
     ],
   },

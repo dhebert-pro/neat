@@ -1,8 +1,8 @@
 import ActionEnum from "@/model/game/action/ActionEnum";
 import type IInput from "@/model/game/neat/IInput";
 import type IOutput from "@/model/game/neat/IOutput";
-import type Player from "@/model/game/Player";
 import type NeatGameState from "@/model/neat/simulation/NeatGameState";
+import type Player from "@/model/game/Player";
 
 const calculateOutput = (gameState: NeatGameState<Player>, input: IInput) => {
   if (!gameState.player) {

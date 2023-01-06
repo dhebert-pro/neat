@@ -1,6 +1,6 @@
-import type Cell from "@/model/game/Cell";
-import GameTokenEnum from "@/model/game/GameTokenEnum";
 import DirectionEnum from "@/model/general/DirectionEnum";
+import GameTokenEnum from "@/model/game/GameTokenEnum";
+import type Cell from "@/model/game/Cell";
 import type Client from "@/model/neat/Client";
 
 export default class Player {

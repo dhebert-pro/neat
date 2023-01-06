@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Application, Assets, Sprite, type ICanvas, Ticker } from "pixi.js";
-import { ref, onMounted } from "vue";
-import Position from "@/model/general/Positionion";
+import { Application, Assets, type ICanvas, Sprite, Ticker } from "pixi.js";
+import { onMounted, ref } from "vue";
 import Agent from "@/model/neat/Agent";
 import Neat from "@/model/neat/Neat";
+import Position from "@/model/general/Positionion";
 import type Client from "@/model/neat/Client";
 
 const SPEED = 10;

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import GenerationPanel from "@/components/GenerationPanel.vue";
 import Generation from "@/model/game/neat/Generation";
-import type Client from "@/model/neat/Client";
-import type Player from "@/model/game/Player";
-import type INeatGenerationIndicateurs from "@/model/neat/simulation/INeatGenerationIndicateurs";
+import GenerationPanel from "@/components/GenerationPanel.vue";
 import newNeat from "@/model/game/neat/GameNeat";
-import type Neat from "@/model/neat/Neat";
-import type Score from "@/model/neat/Score";
 import simulateClient from "@/model/game/simulation/Simulation";
+import type Client from "@/model/neat/Client";
+import type INeatGenerationIndicateurs from "@/model/neat/simulation/INeatGenerationIndicateurs";
+import type Neat from "@/model/neat/Neat";
+import type Player from "@/model/game/Player";
+import type Score from "@/model/neat/Score";
 
 const MAX_STORED_GENERATIONS = 100;
 const GENERATION_DELAY = 10;

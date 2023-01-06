@@ -1,8 +1,8 @@
 import Board from "@/model/game/Board";
-import type Player from "@/model/game/Player";
-import type Neat from "@/model/neat/Neat";
 import NeatGeneration from "@/model/neat/simulation/NeatGeneration";
 import RandomUtil from "@/model/util/RandomUtil";
+import type Neat from "@/model/neat/Neat";
+import type Player from "@/model/game/Player";
 
 export default class Generation extends NeatGeneration<Player> {
   boardPattern: string[][];
