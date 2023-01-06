@@ -1,6 +1,6 @@
 import type NeatGameState from "@/model/neat/simulation/NeatGameState";
 import type Player from "../Player";
-import ActionEnum from "./ActionEnum";
+import ActionEnum from "../action/ActionEnum";
 import type IInput from "./IInput";
 import type IOutput from "./IOutput";
 

@@ -2,6 +2,7 @@ import ConnectionGene from "../genome/ConnectionGene";
 import Genome from "../genome/Genome";
 import NodeGene from "../genome/NodeGene";
 import Client from "./Client";
+import type Score from "./Score";
 import RandomSelector from "./Selector";
 import Species from "./Species";
 
@@ -200,5 +201,27 @@ export default class Neat {
       return this.all_nodes[id - 1];
     }
     return this.getNode();
+  };
+
+  getStats = (): Score => {
+    this.clients.sort(
+      (client1: Client, client2: Client) => client1.score - client2.score
+    );
+    const bestScore = this.clients[this.clients.length - 1].score;
+    let meanScore = bestScore;
+    if (this.clients.length % 2 === 1) {
+      meanScore = this.clients[Math.floor(this.clients.length / 2)].score;
+    } else {
+      meanScore =
+        (this.clients[Math.floor(this.clients.length / 2) - 1].score +
+          this.clients[Math.floor(this.clients.length / 2)].score) /
+        2;
+    }
+    const worstScore = this.clients[0].score;
+    return {
+      bestScore,
+      meanScore,
+      worstScore,
+    };
   };
 }

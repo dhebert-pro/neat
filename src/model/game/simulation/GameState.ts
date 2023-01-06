@@ -1,4 +1,4 @@
-import type Generation from "./Generation";
+import type Generation from "../neat/Generation";
 import Board from "../Board";
 import type Player from "../Player";
 import NeatGameState from "@/model/neat/simulation/NeatGameState";

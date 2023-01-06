@@ -1,7 +1,7 @@
 import Cell from "./Cell";
 import Position from "../general/Position";
 import type Player from "./Player";
-import type Generation from "./base/Generation";
+import type Generation from "./neat/Generation";
 
 export default class Board {
   static BOARD_WIDTH = 9;

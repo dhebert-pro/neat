@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import GenerationPanel from "@/components/GenerationPanel.vue";
-import Generation from "@/model/game/base/Generation";
+import Generation from "@/model/game/neat/Generation";
 import type Client from "@/model/neat/Client";
-import GameState from "@/model/game/base/GameState";
-import Player from "@/model/game/Player";
-import type ActionEnum from "@/model/game/base/ActionEnum";
-import type INeatAction from "@/model/neat/simulation/INeatAction";
+import type Player from "@/model/game/Player";
 import type INeatGenerationIndicateurs from "@/model/neat/simulation/INeatGenerationIndicateurs";
-import type IInput from "@/model/game/base/IInput";
-import type IOutput from "@/model/game/base/IOutput";
-import newNeat from "@/model/game/base/GameNeat";
+import newNeat from "@/model/game/neat/GameNeat";
 import type Neat from "@/model/neat/Neat";
-import calculateInput from "@/model/game/base/Input";
-import calculateOutput from "@/model/game/base/Output";
-import getActionFromOutput from "@/model/neat/simulation/NeatOutput";
-import getPossibleActions from "@/model/game/action/Action";
+import type Score from "@/model/neat/Score";
+import simulateClient from "@/model/game/simulation/Simulation";
+
+const MAX_STORED_GENERATIONS = 100;
+const GENERATION_DELAY = 10;
 
 let neat: Neat = newNeat();
 
@@ -30,75 +26,11 @@ let data: INeatGenerationIndicateurs<Player> = reactive({
   oneStep: false,
 });
 
-const calculateScore = (gameState: GameState) => {
-  if (!gameState.player) {
-    throw new Error("Le joueur n'a pas été créé");
-  }
-  const player: Player = gameState.player;
-  if (!player.cell) {
-    throw new Error("Le joueur n'est pas dans le labyrinthe");
-  }
-  if (player.cell.distanceToEnd === undefined) {
-    throw new Error("La distance à l'arrivée n'a pas été calculée");
-  }
-  const remainingActions: number = gameState.remainingActions;
-  const distanceToEnd: number = player.getDistanceToEnd();
-  let score =
-    gameState.generation.maxActions - distanceToEnd + remainingActions;
-  if (distanceToEnd === 0) {
-    score += 1000;
-  }
-  return score;
-};
-
 const calculateStats = (neat: Neat) => {
-  neat.clients.sort(
-    (client1: Client, client2: Client) => client1.score - client2.score
-  );
-  data.bestScore = neat.clients[neat.clients.length - 1].score;
-  if (neat.clients.length % 2 === 1) {
-    data.meanScore = neat.clients[Math.floor(neat.clients.length / 2)].score;
-  } else {
-    data.meanScore =
-      (neat.clients[Math.floor(neat.clients.length / 2) - 1].score +
-        neat.clients[Math.floor(neat.clients.length / 2)].score) /
-      2;
-  }
-  data.worstScore = neat.clients[0].score;
-};
-
-const playGame = (gameState: GameState) => {
-  if (!gameState.player) {
-    throw new Error("Le joueur n'a pas été créé");
-  }
-  const player: Player = gameState.player;
-  while (!gameState.isFinished()) {
-    const input: IInput = calculateInput(gameState);
-    const output: IOutput = calculateOutput(gameState, input);
-    const possibleActions: INeatAction<GameState, ActionEnum>[] =
-      getPossibleActions(gameState);
-    const action: INeatAction<GameState, ActionEnum> = getActionFromOutput<
-      GameState,
-      IOutput,
-      ActionEnum
-    >(output, possibleActions);
-    action.execute(gameState);
-    gameState.remainingActions--;
-  }
-  const score = calculateScore(gameState);
-
-  player.client.score = score;
-};
-
-const simulateGame = (gameState: GameState) => {
-  playGame(gameState);
-};
-
-const simulateClient = (client: Client, generation: Generation) => {
-  const player = new Player(client);
-  const gameState: GameState = new GameState(player, generation);
-  generation.gameStates.push(gameState);
-  simulateGame(gameState);
+  const stats: Score = neat.getStats();
+  data.bestScore = stats.bestScore;
+  data.meanScore = stats.meanScore;
+  data.worstScore = stats.worstScore;
 };
 
 const nextGeneration = () => {
@@ -111,10 +43,11 @@ const createGeneration = (number: number) => {
   const generation: Generation = new Generation(neat);
   generation.number = number;
   data.generationNumber = number;
-  if (data.generationNumber > 100) {
+  if (data.generationNumber > MAX_STORED_GENERATIONS) {
     data.generations.shift();
   }
   data.generations[data.generationNumber] = generation;
+  data.speciesCount = neat.species.length;
   neat.clients.forEach((client: Client) => {
     simulateClient(client, generation);
   });
@@ -124,7 +57,7 @@ const createGeneration = (number: number) => {
   if (!data.oneStep) {
     setTimeout(() => {
       nextGeneration();
-    }, 10);
+    }, GENERATION_DELAY);
   }
 };
 
