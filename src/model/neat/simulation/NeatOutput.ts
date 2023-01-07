@@ -1,5 +1,5 @@
-import RandomUtil from "@/model/util/RandomUtil";
 import type INeatAction from "@/model/neat/simulation/INeatAction";
+import RandomUtil from "@/model/util/RandomUtil";
 
 export default class NeatOutput {
   static getActionFromOutput = <

@@ -11,7 +11,7 @@ module.exports = {
     "@vue/eslint-config-typescript",
     "@vue/eslint-config-prettier",
   ],
-  plugins: ["sort-imports-es6-autofix"],
+  plugins: ["import"],
   parserOptions: {
     ecmaVersion: "latest",
   },
@@ -26,12 +26,28 @@ module.exports = {
         patterns: [".*"],
       },
     ],
-    "sort-imports-es6-autofix/sort-imports-es6": [
-      2,
+    "import/order": [
+      "error",
       {
-        ignoreCase: false,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
+        alphabetize: {
+          caseInsensitive: true,
+          order: "asc",
+        },
+        groups: ["external", "builtin", "parent", ["sibling", "index"]],
+        "newlines-between": "never",
+        pathGroups: [
+          {
+            group: "external",
+            pattern: "react",
+            position: "before",
+          },
+          {
+            group: "external",
+            pattern: "@my_org/**",
+            position: "after",
+          },
+        ],
+        pathGroupsExcludedImportTypes: ["builtin"],
       },
     ],
   },

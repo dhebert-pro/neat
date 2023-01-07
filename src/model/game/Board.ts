@@ -1,7 +1,7 @@
 import Cell from "@/model/game/Cell";
-import Position from "@/model/general/Position";
 import type Generation from "@/model/game/neat/Generation";
 import type Player from "@/model/game/simulation/Player";
+import Position from "@/model/general/Position";
 
 export default class Board {
   static BOARD_WIDTH = 9;

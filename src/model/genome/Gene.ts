@@ -41,10 +41,17 @@ export default class Gene {
 
   removeFromList = (genes: Gene[]) => {
     let index: number = 0;
+    const type: string = this.constructor.name;
     for (index; index < genes.length; index++) {
       const gene: Gene = genes[index];
-      if ((gene as unknown).equals(this)) {
-        break;
+      if (type === "NodeGene") {
+        if ((this as unknown as NodeGene).equals(gene)) {
+          break;
+        }
+      } else if (type === "ConnectionGene") {
+        if ((this as unknown as ConnectionGene).equals(gene)) {
+          break;
+        }
       }
     }
     genes.splice(index, 1);

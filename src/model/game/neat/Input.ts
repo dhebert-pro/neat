@@ -1,8 +1,8 @@
 import Board from "@/model/game/Board";
-import DirectionEnum from "@/model/general/DirectionEnum";
 import type IInput from "@/model/game/neat/IInput";
-import type NeatGameState from "@/model/neat/simulation/NeatGameState";
 import type Player from "@/model/game/simulation/Player";
+import DirectionEnum from "@/model/general/DirectionEnum";
+import type NeatGameState from "@/model/neat/simulation/NeatGameState";
 
 export default class Input {
   static calculateInput = (gameState: NeatGameState<Player>) => {

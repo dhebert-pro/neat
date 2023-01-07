@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Application, Assets, type ICanvas, Sprite, Ticker } from "pixi.js";
 import { onMounted, ref } from "vue";
+import Position from "@/model/general/Position";
 import Agent from "@/model/neat/Agent";
-import Neat from "@/model/neat/Neat";
-import Position from "@/model/general/Positionion";
 import type Client from "@/model/neat/Client";
+import Neat from "@/model/neat/Neat";
 
 const SPEED = 10;
 const STAGE_WIDTH = 800;

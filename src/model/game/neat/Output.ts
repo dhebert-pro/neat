@@ -1,8 +1,8 @@
 import ActionEnum from "@/model/game/action/ActionEnum";
 import type IInput from "@/model/game/neat/IInput";
 import type IOutput from "@/model/game/neat/IOutput";
-import type NeatGameState from "@/model/neat/simulation/NeatGameState";
 import type Player from "@/model/game/simulation/Player";
+import type NeatGameState from "@/model/neat/simulation/NeatGameState";
 
 export default class Output {
   static calculateOutput = (

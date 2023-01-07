@@ -1,15 +1,15 @@
 import Action from "@/model/game/action/Action";
-import GameState from "@/model/game/simulation/GameState";
-import Input from "@/model/game/neat/Input";
-import NeatOutput from "@/model/neat/simulation/NeatOutput";
-import Output from "@/model/game/neat/Output";
-import Player from "@/model/game/simulation/Player";
 import type ActionEnum from "@/model/game/action/ActionEnum";
-import type Client from "@/model/neat/Client";
 import type Generation from "@/model/game/neat/Generation";
 import type IInput from "@/model/game/neat/IInput";
-import type INeatAction from "@/model/neat/simulation/INeatAction";
+import Input from "@/model/game/neat/Input";
 import type IOutput from "@/model/game/neat/IOutput";
+import Output from "@/model/game/neat/Output";
+import GameState from "@/model/game/simulation/GameState";
+import Player from "@/model/game/simulation/Player";
+import type Client from "@/model/neat/Client";
+import type INeatAction from "@/model/neat/simulation/INeatAction";
+import NeatOutput from "@/model/neat/simulation/NeatOutput";
 
 export default class Simulation {
   static calculateScore = (gameState: GameState) => {

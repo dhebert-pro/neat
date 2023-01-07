@@ -1,10 +1,10 @@
-import Client from "@/model/neat/Client";
 import ConnectionGene from "@/model/genome/ConnectionGene";
 import Genome from "@/model/genome/Genome";
 import NodeGene from "@/model/genome/NodeGene";
+import Client from "@/model/neat/Client";
+import type IScore from "@/model/neat/IScore";
 import RandomSelector from "@/model/neat/Selector";
 import Species from "@/model/neat/Species";
-import type IScore from "@/model/neat/IScore";
 
 export default class Neat {
   all_connections: ConnectionGene[] = [];
