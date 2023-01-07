@@ -4,7 +4,7 @@ import Genome from "@/model/genome/Genome";
 import NodeGene from "@/model/genome/NodeGene";
 import RandomSelector from "@/model/neat/Selector";
 import Species from "@/model/neat/Species";
-import type Score from "@/model/neat/Score";
+import type IScore from "@/model/neat/IScore";
 
 export default class Neat {
   all_connections: ConnectionGene[] = [];
@@ -203,7 +203,7 @@ export default class Neat {
     return this.getNode();
   };
 
-  getStats = (): Score => {
+  getStats = (): IScore => {
     this.clients.sort(
       (client1: Client, client2: Client) => client1.score - client2.score
     );

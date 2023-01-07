@@ -3,12 +3,12 @@ import { reactive } from "vue";
 import GameNeat from "@/model/game/neat/GameNeat";
 import Generation from "@/model/game/neat/Generation";
 import GenerationPanel from "@/components/GenerationPanel.vue";
-import simulateClient from "@/model/game/simulation/Simulation";
+import Simulation from "@/model/game/simulation/Simulation";
 import type Client from "@/model/neat/Client";
 import type INeatGenerationIndicateurs from "@/model/neat/simulation/INeatGenerationIndicateurs";
+import type IScore from "@/model/neat/IScore";
 import type Neat from "@/model/neat/Neat";
 import type Player from "@/model/game/simulation/Player";
-import type Score from "@/model/neat/Score";
 
 const MAX_STORED_GENERATIONS = 100;
 const GENERATION_DELAY = 10;
@@ -27,7 +27,7 @@ let data: INeatGenerationIndicateurs<Player> = reactive({
 });
 
 const calculateStats = (neat: Neat) => {
-  const stats: Score = neat.getStats();
+  const stats: IScore = neat.getStats();
   data.bestScore = stats.bestScore;
   data.meanScore = stats.meanScore;
   data.worstScore = stats.worstScore;
@@ -49,7 +49,7 @@ const createGeneration = (number: number) => {
   data.generations[data.generationNumber] = generation;
   data.speciesCount = neat.species.length;
   neat.clients.forEach((client: Client) => {
-    simulateClient(client, generation);
+    Simulation.simulateClient(client, generation);
   });
   calculateStats(neat);
   neat.evolve();

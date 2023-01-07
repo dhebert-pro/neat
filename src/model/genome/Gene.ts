@@ -1,3 +1,6 @@
+import type ConnectionGene from "@/model/genome/ConnectionGene";
+import type NodeGene from "@/model/genome/NodeGene";
+
 export default class Gene {
   innovationNumber: number;
 
@@ -5,8 +8,17 @@ export default class Gene {
     this.innovationNumber = innovationNumber;
   }
 
-  isInList = (genes: Gene[]) => {
-    return !!genes.find((gene: Gene) => (this as unknown).equals(gene));
+  isInList = (genes: Gene[]): boolean => {
+    if (this.constructor.name === "NodeGene") {
+      return !!genes.find((gene: Gene) =>
+        (this as unknown as NodeGene).equals(gene as NodeGene)
+      );
+    } else if (this.constructor.name === "ConnectionGene") {
+      return !!genes.find((gene: Gene) =>
+        (this as unknown as ConnectionGene).equals(gene as ConnectionGene)
+      );
+    }
+    throw new Error(`${this.constructor.name} is not of type Gene`);
   };
 
   addToList = (genes: Gene[]) => {

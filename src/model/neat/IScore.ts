@@ -1,7 +1,7 @@
-interface Score {
+interface IScore {
   bestScore: number;
   meanScore: number;
   worstScore: number;
 }
 
-export default Score;
+export default IScore;
